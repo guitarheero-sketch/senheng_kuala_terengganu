@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Generator Resit / Invois Kerja</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --bg: #f0f2f5;
+      --panel: #ffffff;
+      --ink: #1a1c1e;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --brand: #2563eb;
+      --brand-dark: #1d4ed8;
+      --danger: #ef4444;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --radius: 16px;
+      --safe-bottom: env(safe-area-inset-bottom);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* Layout Containers */
+    .app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: white;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--brand);
+    }
+
+    /* Tabs for Mobile */
+    .mobile-tabs {
+      display: none;
+      background: white;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--line);
+      gap: 8px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--brand);
+      color: white;
+      border-color: var(--brand);
+    }
+
+    /* Main Content */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 24px;
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .scroll-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Form Styles */
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #334155;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      font-size: 15px;
+      transition: all 0.2s;
+      background: #fcfdfe;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--brand);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .grid-cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Button Styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      gap: 8px;
+    }
+
+    .btn-primary { background: var(--brand); color: white; }
+    .btn-primary:hover { background: var(--brand-dark); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-secondary { background: #f1f5f9; color: #475569; }
+    .btn-secondary:hover { background: #e2e8f0; }
+
+    .btn-danger { background: #fee2e2; color: var(--danger); }
+    .btn-block { width: 100%; }
+
+    /* Items Editor */
+    .item-card {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    /* Preview Container */
+    .preview-container {
+      position: sticky;
+      top: 88px;
+      height: calc(100vh - 110px);
+      background: #cbd5e1;
+      border-radius: var(--radius);
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* Paper Styling */
+    .paper {
+      width: 210mm;
+      min-height: 297mm;
+      background: white;
+      padding: 15mm;
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+      transform-origin: top center;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    /* Paper Content Styling */
+    .p-header { border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+    .p-company-info { flex: 1; }
+    .p-company-name { font-size: 20pt; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
+    .p-meta { font-size: 9.5pt; color: #333; line-height: 1.4; }
+    .p-title-area { text-align: right; }
+    .p-doc-type { font-size: 24pt; font-weight: 900; margin-bottom: 10px; }
+    
+    .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; margin-bottom: 20px; }
+    .p-box { border: 1px solid #ccc; padding: 10px; min-height: 80px; }
+    .p-box-title { font-size: 8pt; font-weight: 700; color: #666; text-transform: uppercase; border-bottom: 1px solid #eee; margin-bottom: 5px; }
+
+    .p-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .p-table th { background: #f1f5f9; font-size: 9pt; padding: 8px; border: 1px solid #999; }
+    .p-table td { padding: 8px; border: 1px solid #999; font-size: 10pt; }
+
+    .p-footer-grid { display: grid; grid-template-columns: 1fr 200px; gap: 20px; }
+    .p-summary-table { width: 100%; border-collapse: collapse; }
+    .p-summary-table td { border: 1px solid #999; padding: 8px; }
+    .p-total-row { font-weight: 800; background: #f8fafc; font-size: 12pt; }
+
+    .p-sig-area { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; }
+    .p-sig-box { border-top: 1px solid #000; text-align: center; padding-top: 5px; font-size: 9pt; margin-top: 60px; position: relative;}
+    .p-stamp { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); max-height: 70px; }
+
+    .hidden { display: none !important; }
+
+    /* Summary Bar */
+    .summary-bar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    /* Mobile Specific Overrides */
+    @media (max-width: 1024px) {
+      .main-grid { grid-template-columns: 1fr; padding: 12px; gap: 16px; }
+      .mobile-tabs { display: flex; position: sticky; top: 60px; z-index: 45; }
+      .preview-container { 
+        height: auto; 
+        position: static; 
+        padding: 8px; 
+        background: #f1f5f9;
+        min-height: 600px;
+      }
+      .paper { margin: 0; }
+      
+      #form-section.mobile-hidden, 
+      #preview-section.mobile-hidden { display: none; }
+    }
+
+    @media print {
+      .header, .mobile-tabs, .scroll-panel, .btn { display: none !important; }
+      .main-grid { display: block; padding: 0; }
+      .preview-container { background: white; padding: 0; overflow: visible; height: auto; display: block; }
+      .paper { box-shadow: none; transform: scale(1) !important; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <header class="header">
+      <div class="header-content">
+        <h1>RESIT JANA</h1>
+        <div class="header-actions">
+          <button class="btn btn-primary" id="pdfBtn">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <span id="pdfBtnText">PDF</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-tabs">
+      <button class="tab-btn active" id="tab-form-btn" onclick="switchTab('form')">Maklumat</button>
+      <button class="tab-btn" id="tab-preview-btn" onclick="switchTab('preview')">Pratinjau</button>
+    </div>
+
+    <main class="main-grid">
+      <!-- FORM SECTION -->
+      <section class="scroll-panel" id="form-section">
+        
+        <!-- Syarikat -->
+        <div class="card">
+          <div class="card-title">Maklumat Syarikat</div>
+          <div class="form-group">
+            <label>Nama Syarikat</label>
+            <input type="text" id="companyName" value="AGH ELEC TRADING">
+          </div>
+          <div class="form-group">
+            <label>No. Pendaftaran</label>
+            <input type="text" id="companyReg" value="LA0052469-K">
+          </div>
+          <div class="form-group">
+            <label>Alamat Syarikat</label>
+            <textarea id="companyAddress" rows="3">NO A21, TINGKAT 1, JALAN BAHAGIA 10,
+28000 TEMERLOH, PAHANG</textarea>
+          </div>
+          <div class="grid-cols-2">
+            <div class="form-group">
+              <label>No. Telefon</label>
+              <input type="text" id="companyPhone" value="0133157598">
+            </div>
+            <div class="form-group">
+              <label>Bank</label>
+              <input type="text" id="bankName" value="BANK MUAMALAT">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>No. Akaun Bank</label>
+            <input type="text" id="bankAccount" value="06040001443713">
+          </div>
+        </div>
+
+        <!-- Dokumen -->
+        <div class="card">
+          <div class="card-title">Butiran Dokumen</div>
+          <div class="grid-cols-2">
+            <div class="form-group">
+              <label>Jenis</label>
+              <select id="docTitle">
+                <option value="RESIT">RESIT</option>
+                <option value="INVOIS">INVOIS</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tarikh</label>
+              <input type="date" id="docDate">
+            </div>
+          </div>
+          <div class="grid-cols-2">
+            <div class="form-group">
+              <label>No. Rujukan</label>
+              <input type="text" id="docNo" placeholder="E.g. R-101">
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <input type="text" id="paymentStatus" placeholder="E.g. PAID">
+            </div>
+          </div>
+        </div>
+
+        <!-- Penerima -->
+        <div class="card">
+          <div class="card-title">Penerima & Tapak</div>
+          <div class="form-group">
+            <label>Kepada / Diterima Dari</label>
+            <input type="text" id="recipientName" value="PERNIAGAAN PAKSI DANA">
+          </div>
+          <div class="form-group">
+            <label>Alamat Penerima</label>
+            <textarea id="recipientAddress" rows="2" placeholder="Boleh kosong"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Tapak Kerja</label>
+            <textarea id="siteAddress" rows="2">TAMAN LANCHANG PERMAI</textarea>
+          </div>
+        </div>
+
+        <!-- Items -->
+        <div class="card">
+          <div class="card-title">Butiran Kerja</div>
+          <div id="itemsEditor"></div>
+          <button class="btn btn-secondary btn-block" style="margin-top: 10px;" id="addItemBtn">+ Tambah Item</button>
+        </div>
+
+        <!-- Final -->
+        <div class="card">
+          <div class="card-title">Tetapan Akhir</div>
+          <div class="form-group">
+            <label>Nota</label>
+            <textarea id="notes" rows="2">Barang yang dijual tidak boleh dikembalikan.</textarea>
+          </div>
+          <div class="grid-cols-2">
+            <div class="form-group">
+              <label>Diskaun (RM)</label>
+              <input type="number" id="discount" value="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label>Tunjuk Cop</label>
+              <select id="showStamp">
+                <option value="yes">Ya</option>
+                <option value="no">Tidak</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="summary-bar">
+            <span>Subtotal:</span><span id="uiSubtotal">RM0.00</span>
+            <span>Diskaun:</span><span id="uiDiscount">RM0.00</span>
+            <span style="font-weight: 800;">JUMLAH:</span><span style="font-weight: 800; color: var(--brand);" id="uiGrandTotal">RM0.00</span>
+          </div>
+
+          <div class="grid-cols-2" style="margin-top: 15px;">
+            <button class="btn btn-secondary" id="resetBtn">Reset</button>
+            <button class="btn btn-secondary" id="saveBtn">Simpan</button>
+          </div>
+          <div id="statusText" style="text-align:center; font-size:12px; margin-top:8px; color:var(--muted)"></div>
+        </div>
+      </section>
+
+      <!-- PREVIEW SECTION -->
+      <section class="mobile-hidden" id="preview-section">
+        <div class="preview-container" id="previewContainer">
+          <article class="paper" id="receiptPaper">
+            <div class="p-header">
+              <div class="p-company-info">
+                <div class="p-company-name" id="pCompanyName">COMPANY NAME</div>
+                <div class="p-meta">
+                  <div id="pCompanyReg">No: 123456-X</div>
+                  <div id="pCompanyAddress">Address Line 1, Address Line 2</div>
+                  <div id="pCompanyPhone">Tel: 012-3456789</div>
+                  <div id="pBankInfo">Bank: MAYBANK | Acc: 123456789</div>
+                </div>
+              </div>
+              <div class="p-title-area">
+                <div class="p-doc-type" id="pDocTitle">RESIT</div>
+                <div class="p-meta" style="text-align: right;">
+                  <div>Tarikh: <span id="pDocDate">01/01/2024</span></div>
+                  <div id="pDocNoRow">No: <span id="pDocNo"></span></div>
+                  <div id="pStatusRow">Status: <span id="pPaymentStatus"></span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-grid">
+              <div class="p-box">
+                <div class="p-box-title">Penerima</div>
+                <div style="font-weight: 700;" id="pRecipientName">CLIENT NAME</div>
+                <div id="pRecipientAddress" style="font-size: 9pt; white-space: pre-line;"></div>
+              </div>
+              <div class="p-box">
+                <div class="p-box-title">Tapak Kerja</div>
+                <div id="pSiteAddress" style="font-size: 9pt; white-space: pre-line;"></div>
+              </div>
+            </div>
+
+            <table class="p-table">
+              <thead>
+                <tr>
+                  <th style="width: 40px;">Bil</th>
+                  <th>Butiran Kerja / Barang</th>
+                  <th style="width: 80px; text-align: center;">Kuantiti</th>
+                  <th style="width: 100px; text-align: right;">Harga (RM)</th>
+                  <th style="width: 100px; text-align: right;">Jumlah (RM)</th>
+                </tr>
+              </thead>
+              <tbody id="pItemsBody"></tbody>
+            </table>
+
+            <div class="p-footer-grid">
+              <div class="p-box" style="min-height: 60px;">
+                <div class="p-box-title">Nota</div>
+                <div id="pNotes" style="font-size: 8.5pt;"></div>
+              </div>
+              <table class="p-summary-table">
+                <tr>
+                  <td style="font-size: 9pt;">Subtotal</td>
+                  <td style="text-align: right;" id="pSubtotal">RM0.00</td>
+                </tr>
+                <tr id="pDiscountRow">
+                  <td style="font-size: 9pt;">Diskaun</td>
+                  <td style="text-align: right;" id="pDiscount">RM0.00</td>
+                </tr>
+                <tr class="p-total-row">
+                  <td>JUMLAH</td>
+                  <td style="text-align: right;" id="pGrandTotal">RM0.00</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="p-sig-area">
+              <div class="p-sig-box">Diterima Oleh</div>
+              <div class="p-sig-box">
+                <img src="stamp.png" class="p-stamp" id="pStamp" onerror="this.style.display='none'">
+                Tandatangan & Cop Syarikat
+              </div>
+            </div>
+
+            <div style="margin-top: 30px; font-size: 8pt; color: #777; display: flex; justify-content: space-between; border-top: 1px solid #eee; padding-top: 5px;">
+              <span>Dokumen dijana secara digital.</span>
+              <span id="pPrintTime"></span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Logic setup
+    const DEFAULT_ITEMS = [
+      { desc: 'Contoh Item 1', qty: 1, unit: 150 },
+      { desc: 'Contoh Item 2', qty: 2, unit: 50 }
+    ];
+
+    let items = [...DEFAULT_ITEMS];
+    const $ = (id) => document.getElementById(id);
+    const fmt = (num) => 'RM' + Number(num || 0).toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    // Tab switcher for mobile
+    function switchTab(tab) {
+      const formSec = $('form-section');
+      const previewSec = $('preview-section');
+      const btnForm = $('tab-form-btn');
+      const btnPreview = $('tab-preview-btn');
+      
+      if(tab === 'form') {
+        formSec.classList.remove('mobile-hidden');
+        previewSec.classList.add('mobile-hidden');
+        btnForm.classList.add('active');
+        btnPreview.classList.remove('active');
+      } else {
+        formSec.classList.add('mobile-hidden');
+        previewSec.classList.remove('mobile-hidden');
+        btnPreview.classList.add('active');
+        btnForm.classList.remove('active');
+        updatePreview();
+      }
+    }
+
+    // Dynamic Paper Scaling
+    function scalePreview() {
+      const container = $('previewContainer');
+      const paper = $('receiptPaper');
+      if (!container || !paper) return;
+
+      const availableWidth = container.clientWidth - 40;
+      const paperWidth = paper.offsetWidth;
+      const scale = Math.min(1, availableWidth / paperWidth);
+      
+      paper.style.transform = `scale(${scale})`;
+      
+      // Adjust container height to match scaled paper
+      if (window.innerWidth <= 1024) {
+        container.style.height = (paper.offsetHeight * scale + 40) + 'px';
+      }
+    }
+
+    function renderItems() {
+      const container = $('itemsEditor');
+      container.innerHTML = '';
+      items.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'item-card';
+        div.innerHTML = `
+          <div class="item-header">
+            <span style="font-weight:700; font-size:12px; color:var(--muted)">ITEM #${idx + 1}</span>
+            <button class="btn btn-danger btn-small" style="padding:4px 8px; font-size:11px;" onclick="removeItem(${idx})">Padam</button>
+          </div>
+          <div class="form-group">
+            <textarea placeholder="Butiran" oninput="updateItem(${idx}, 'desc', this.value)">${item.desc}</textarea>
+          </div>
+          <div class="grid-cols-2">
+             <div class="form-group">
+               <label>Unit</label>
+               <input type="number" value="${item.qty}" oninput="updateItem(${idx}, 'qty', this.value)">
+             </div>
+             <div class="form-group">
+               <label>Harga (RM)</label>
+               <input type="number" value="${item.unit}" oninput="updateItem(${idx}, 'unit', this.value)">
+             </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      updatePreview();
+    }
+
+    function updateItem(idx, field, val) {
+      items[idx][field] = field === 'desc' ? val : Number(val);
+      updatePreview();
+    }
+
+    function removeItem(idx) {
+      items.splice(idx, 1);
+      renderItems();
+    }
+
+    $('addItemBtn').onclick = () => {
+      items.push({ desc: '', qty: 1, unit: 0 });
+      renderItems();
+    };
+
+    function updatePreview() {
+      // Sync basic fields
+      $('pCompanyName').innerText = $('companyName').value || 'NAMA SYARIKAT';
+      $('pCompanyReg').innerText = "No: " + ($('companyReg').value || '-');
+      $('pCompanyAddress').innerText = $('companyAddress').value || '-';
+      $('pCompanyPhone').innerText = "Tel: " + ($('companyPhone').value || '-');
+      $('pBankInfo').innerText = `Bank: ${$('bankName').value} | Acc: ${$('bankAccount').value}`;
+      
+      $('pDocTitle').innerText = $('docTitle').value;
+      
+      const d = $('docDate').value;
+      if(d) {
+        const parts = d.split('-');
+        if(parts.length === 3) {
+          // Fix parts display: parts=year, parts=month, parts=day
+          $('pDocDate').innerText = `${parts}/${parts}/${parts}`;
+        }
+      }
+
+      $('pDocNo').innerText = $('docNo').value;
+      $('pDocNoRow').className = $('docNo').value ? '' : 'hidden';
+      $('pPaymentStatus').innerText = $('paymentStatus').value;
+      $('pStatusRow').className = $('paymentStatus').value ? '' : 'hidden';
+
+      $('pRecipientName').innerText = $('recipientName').value || 'NAMA PENERIMA';
+      $('pRecipientAddress').innerText = $('recipientAddress').value;
+      $('pSiteAddress').innerText = $('siteAddress').value;
+      $('pNotes').innerText = $('notes').value;
+
+      // Table
+      const tbody = $('pItemsBody');
+      tbody.innerHTML = '';
+      let subtotal = 0;
+      items.forEach((item, i) => {
+        const lineTotal = (item.qty || 0) * (item.unit || 0);
+        subtotal += lineTotal;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="text-align:center">${i+1}</td>
+          <td>${(item.desc || '').replace(/\n/g, '<br>')}</td>
+          <td style="text-align:center">${item.qty || 0}</td>
+          <td style="text-align:right">${(item.unit || 0).toFixed(2)}</td>
+          <td style="text-align:right">${lineTotal.toFixed(2)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const disc = Number($('discount').value || 0);
+      const grand = subtotal - disc;
+
+      $('pSubtotal').innerText = fmt(subtotal);
+      $('pDiscount').innerText = fmt(disc);
+      $('pDiscountRow').className = disc > 0 ? '' : 'hidden';
+      $('pGrandTotal').innerText = fmt(grand);
+
+      // UI Summary
+      $('uiSubtotal').innerText = fmt(subtotal);
+      $('uiDiscount').innerText = fmt(disc);
+      $('uiGrandTotal').innerText = fmt(grand);
+
+      $('pStamp').style.display = $('showStamp').value === 'yes' ? 'block' : 'none';
+      $('pPrintTime').innerText = "Dicetak: " + new Date().toLocaleString('ms-MY');
+
+      scalePreview();
+    }
+
+    // Actions
+    $('saveBtn').onclick = () => {
+      const data = {
+        fields: {
+          companyName: $('companyName').value,
+          companyReg: $('companyReg').value,
+          companyAddress: $('companyAddress').value,
+          companyPhone: $('companyPhone').value,
+          bankName: $('bankName').value,
+          bankAccount: $('bankAccount').value,
+          recipientName: $('recipientName').value,
+          recipientAddress: $('recipientAddress').value,
+          siteAddress: $('siteAddress').value,
+          notes: $('notes').value
+        },
+        items
+      };
+      localStorage.setItem('resit_v2_data', JSON.stringify(data));
+      $('statusText').innerText = "Data disimpan!";
+      setTimeout(() => $('statusText').innerText = "", 2000);
+    };
+
+    $('resetBtn').onclick = () => {
+      if(confirm('Reset semua data?')) {
+        localStorage.removeItem('resit_v2_data');
+        location.reload();
+      }
+    };
+
+    $('pdfBtn').onclick = async () => {
+      const btn = $('pdfBtn');
+      const text = $('pdfBtnText');
+
+      if (typeof html2pdf === 'undefined') {
+        alert('Library PDF gagal dimuatkan. Sila periksa sambungan internet anda.');
+        return;
+      }
+
+      btn.disabled = true;
+      text.innerText = "Dijana...";
+
+      updatePreview();
+      const element = $('receiptPaper');
+      const opt = {
+        margin: 0,
+        filename: `${$('docTitle').value}_${$('recipientName').value || 'Dokumen'}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      const originalTransform = element.style.transform;
+      element.style.transform = 'none'; // Essential for html2canvas to capture correctly
+      
+      try {
+        await html2pdf().set(opt).from(element).save();
+      } catch (err) {
+        console.error("PDF Error:", err);
+        alert("Gagal menjana PDF. Sila cuba lagi.");
+      } finally {
+        element.style.transform = originalTransform;
+        btn.disabled = false;
+        text.innerText = "PDF";
+        scalePreview();
+      }
+    };
+
+    // Init
+    window.onload = () => {
+      const today = new Date().toISOString().split('T'); // Fix: added index
+      $('docDate').value = today;
+      
+      const saved = localStorage.getItem('resit_v2_data');
+      if(saved) {
+        try {
+          const d = JSON.parse(saved);
+          if (d && d.fields) {
+            Object.keys(d.fields).forEach(k => { 
+              if($(k)) $(k).value = d.fields[k]; 
+            });
+          }
+          if (d && d.items) items = d.items;
+        } catch (e) {
+          console.error("Failed to load saved data", e);
+        }
+      }
+      
+      renderItems();
+      
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        el.oninput = updatePreview;
+      });
+
+      window.onresize = scalePreview;
+      setTimeout(scalePreview, 100); // Initial scaling
+    };
+  </script>
+</body>
+</html>
