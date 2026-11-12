@@ -1,856 +1,1178 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ms">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#b90018" />
-  <title>Senheng Kuala Terengganu · Google Review S-Coin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#d70921">
+  <meta name="description" content="Pilih dan edit ayat Google Review ikut pengalaman sebenar anda di Senheng Kuala Terengganu.">
+  <title>Senheng Kuala Terengganu · Google Review Helper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --red: #d70921;
-      --red-dark: #940012;
-      --red-soft: #fff0f2;
-      --gold: #f7c54b;
-      --gold-soft: #fff5d8;
-      --green: #11834f;
-      --green-soft: #e8fff3;
-      --ink: #1f1f24;
-      --muted: #70717a;
-      --line: rgba(31, 31, 36, .10);
-      --paper: #ffffff;
-      --bg: #fff8f1;
-      --radius-xl: 30px;
-      --radius: 20px;
-      --shadow: 0 18px 48px rgba(148, 0, 18, .16);
+    :root{
+      --red:#d70921;--red-dark:#940012;--red-soft:#fff0f2;--gold:#f7c54b;--gold-soft:#fff5d8;--amber:#7a5200;
+      --green:#11834f;--green-soft:#e8fff3;--ink:#1f1f24;--muted:#6b6c75;--line:rgba(31,31,36,.11);--paper:#fff;
+      --radius:20px;--shadow:0 14px 36px rgba(148,0,18,.10);
     }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%}
+    body{
+      font-family:"Noto Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);line-height:1.45;font-size:15px;
+      background:radial-gradient(circle at 12% 2%,rgba(247,197,75,.34),transparent 30%),radial-gradient(circle at 92% 8%,rgba(215,9,33,.16),transparent 32%),linear-gradient(180deg,#fffaf2 0%,#fff3f4 50%,#fffdf8 100%);
+      background-color:#fffaf2;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+    }
+    button,input,textarea{font:inherit;color:inherit}
+    button{cursor:pointer}
+    [hidden]{display:none!important}
+    .phone{width:min(100%,460px);min-height:100dvh;margin:0 auto;padding:0 16px;display:flex;flex-direction:column}
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { margin: 0; min-height: 100%; }
-    body {
-      font-family: "Noto Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at 14% 4%, rgba(247,197,75,.36), transparent 28%),
-        radial-gradient(circle at 91% 10%, rgba(215,9,33,.20), transparent 30%),
-        linear-gradient(180deg, #fffaf2 0%, #fff2f4 48%, #fffdf8 100%);
-      color: var(--ink);
-      line-height: 1.45;
-      overflow-x: hidden;
-    }
+    .topbar{position:sticky;top:0;z-index:10;margin:0 -16px 8px;padding:max(12px,env(safe-area-inset-top)) 16px 10px;background:rgba(255,248,241,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.7)}
+    .store-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .brand-icon{width:38px;height:38px;border-radius:13px;object-fit:cover;background:var(--red);box-shadow:0 7px 18px rgba(215,9,33,.18);flex:0 0 auto}
+    .brand-copy{min-width:0}
+    .brand-copy strong{display:block;font-size:.92rem;font-weight:900;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brand-copy span{display:block;color:var(--muted);font-size:.74rem;font-weight:700}
+    .step-pill{flex:0 0 auto;padding:7px 11px;border-radius:999px;background:var(--red-soft);border:1px solid rgba(215,9,33,.14);color:var(--red-dark);font-size:.74rem;font-weight:900}
+    .progress{height:7px;margin-top:10px;border-radius:999px;background:rgba(31,31,36,.08);overflow:hidden}
+    .progress i{display:block;width:33%;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .28s ease}
 
-    button, input, textarea { font: inherit; }
-    button { cursor: pointer; }
-    img { max-width: 100%; display: block; }
+    .content{flex:1;padding:6px 0 18px}
+    .screen{display:none}
+    .screen.active{display:block;animation:enter .22s ease}
+    @keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    @media (prefers-reduced-motion:reduce){.screen.active{animation:none}.progress i{transition:none}}
 
-    .phone {
-      width: min(100%, 460px);
-      min-height: 100svh;
-      margin: 0 auto;
-      padding: max(12px, env(safe-area-inset-top)) 12px max(20px, env(safe-area-inset-bottom));
-      display: flex;
-      flex-direction: column;
-    }
+    .hero{padding:18px 18px 16px;border-radius:24px;background:linear-gradient(135deg,var(--red) 0%,#b8061b 60%,var(--red-dark) 100%);color:#fff;box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .hero::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(247,197,75,.55),transparent 70%)}
+    .kicker{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.16);font-size:.72rem;font-weight:800;letter-spacing:.02em}
+    h1,h2,h3{margin:0;letter-spacing:-.03em;line-height:1.15}
+    .hero h1{margin-top:10px;font-size:1.5rem;font-weight:900}
+    .hero p{margin:6px 0 0;color:rgba(255,255,255,.88);font-size:.88rem}
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      margin: -12px -12px 10px;
-      padding: max(12px, env(safe-area-inset-top)) 12px 10px;
-      background: linear-gradient(180deg, rgba(255,248,241,.96), rgba(255,248,241,.82));
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255,255,255,.7);
-    }
+    .card{margin-top:12px;padding:16px;border-radius:var(--radius);background:var(--paper);border:1px solid var(--line);box-shadow:0 6px 18px rgba(148,0,18,.05)}
+    .eyebrow{display:block;margin-bottom:4px;color:var(--red);font-size:.7rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+    .card h2{font-size:1.2rem;font-weight:900}
+    .sub{margin:5px 0 14px;color:var(--muted);font-size:.86rem}
 
-    .store-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
+    .field{margin:0 0 14px}
+    .label{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:7px;font-size:.86rem;font-weight:800}
+    .label small{color:var(--muted);font-size:.76rem;font-weight:600}
+    input[type=text],textarea{width:100%;min-height:50px;padding:12px 14px;border:1.5px solid var(--line);border-radius:15px;background:#fff;outline:none;font-size:1rem;transition:border-color .15s,box-shadow .15s}
+    input:focus,textarea:focus,.prefix:focus-within{border-color:var(--red);box-shadow:0 0 0 4px rgba(215,9,33,.10)}
+    .prefix{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:15px;background:#fff;overflow:hidden}
+    .prefix span{padding-left:14px;color:var(--muted);font-weight:900}
+    .prefix input{border:0;box-shadow:none!important;padding-left:6px}
+    .staff-ok{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border:1.5px solid #9fd8bb;border-radius:15px;background:var(--green-soft)}
+    .staff-ok small{display:block;color:var(--green);font-size:.74rem;font-weight:800}
+    .staff-ok b{font-size:1.1rem;letter-spacing:.03em}
+    .link{padding:8px 4px;border:0;background:none;color:var(--red);font-size:.85rem;font-weight:800}
+    .error{display:none;margin:7px 2px 0;color:var(--red);font-size:.82rem;font-weight:700}
+    .error.show{display:block}
 
-    .brand-mini { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .brand-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 14px;
-      object-fit: cover;
-      background: #fff;
-      box-shadow: 0 7px 18px rgba(215,9,33,.16);
-    }
-    .brand-copy { min-width: 0; }
-    .brand-copy strong {
-      display: block;
-      font-size: .92rem;
-      font-weight: 900;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      letter-spacing: -.02em;
-    }
-    .brand-copy span { display: block; color: var(--muted); font-size: .74rem; font-weight: 700; }
+    .group{margin:14px 2px 6px;color:#8a7f78;font-size:.7rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+    .group:first-child{margin-top:2px}
+    .rows{display:grid;gap:8px}
+    .row{display:flex;align-items:center;gap:12px;width:100%;padding:12px 12px;border:1.5px solid var(--line);border-radius:16px;background:#fff;text-align:left;transition:border-color .15s,background .15s,transform .1s}
+    .row:active{transform:scale(.99)}
+    .row .ic{display:grid;place-items:center;flex:0 0 auto;width:42px;height:42px;border-radius:13px;background:var(--gold-soft);font-size:1.25rem}
+    .row .txt{flex:1;min-width:0}
+    .row strong{display:block;font-size:.95rem;font-weight:800}
+    .row small{display:block;color:var(--muted);font-size:.8rem;line-height:1.3}
+    .row .chev{flex:0 0 auto;color:#b9b0aa;font-size:1.3rem;font-weight:700}
+    .row.selected{border-color:var(--red);background:var(--red-soft)}
+    .row.selected .ic{background:#fff}
 
-    .step-pill {
-      flex: 0 0 auto;
-      border-radius: 999px;
-      padding: 8px 10px;
-      font-size: .72rem;
-      font-weight: 900;
-      color: var(--red-dark);
-      background: var(--red-soft);
-      border: 1px solid rgba(215,9,33,.12);
-    }
+    .notice{display:flex;gap:9px;margin:14px 0 0;padding:11px 12px;border-radius:14px;background:var(--gold-soft);color:var(--amber);font-size:.8rem;line-height:1.45}
+    .notice b{flex:0 0 auto}
+    .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+    .chip{min-height:40px;padding:8px 14px;border:1.5px solid var(--line);border-radius:999px;background:#fff;font-size:.88rem;font-weight:700}
+    .chip.selected{border-color:var(--red);background:var(--red-soft);color:var(--red)}
+    .calc{padding:12px 14px;border-radius:15px;background:linear-gradient(135deg,var(--gold-soft),#fff);border:1px solid rgba(247,197,75,.5);color:var(--muted);font-size:.85rem;line-height:1.45}
+    .calc strong{display:block;color:var(--ink);font-size:1.05rem}
+    .calc span{display:block}
+    .calc .fee{margin-top:4px;font-size:.74rem;color:#857d77}
 
-    .progress {
-      margin-top: 10px;
-      height: 7px;
-      background: rgba(31,31,36,.08);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .progress > i {
-      display: block;
-      width: 20%;
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--red), var(--gold));
-      transition: width .28s ease;
-    }
+    .options{display:grid;gap:9px}
+    .opt{position:relative;display:block;width:100%;padding:13px 14px 13px 44px;border:1.5px solid var(--line);border-radius:16px;background:#fff;text-align:left;font-size:.9rem;line-height:1.5;transition:border-color .15s,background .15s}
+    .opt::before{content:"";position:absolute;left:14px;top:15px;width:18px;height:18px;border-radius:50%;border:2px solid #cfc7c1;background:#fff}
+    .opt.selected{border-color:var(--red);background:var(--red-soft)}
+    .opt.selected::before{border-color:var(--red);background:radial-gradient(circle,var(--red) 0 45%,#fff 50%)}
+    .btn-swap{display:block;width:100%;min-height:46px;margin-top:10px;border:1.5px dashed rgba(215,9,33,.35);border-radius:15px;background:#fff;color:var(--red);font-weight:800;font-size:.92rem}
+    .btn-swap:active{background:var(--red-soft)}
+    textarea{min-height:140px;resize:vertical;line-height:1.55}
+    .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+    .tag{padding:5px 9px;border-radius:9px;background:var(--gold-soft);color:#5d4300;font-size:.84rem;font-weight:800}
+    .hint{margin:6px 2px 0;color:var(--muted);font-size:.78rem;line-height:1.45}
 
-    .screen {
-      display: none;
-      flex: 1;
-      animation: screenIn .22s ease;
-    }
-    .screen.active { display: flex; flex-direction: column; }
-    @keyframes screenIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .preview{margin-top:14px;padding:14px;border-radius:16px;border:1px solid var(--line);background:#fafafa}
+    .preview-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .avatar{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#1a73e8;color:#fff;font-weight:900}
+    .preview-head strong{display:block;font-size:.86rem}
+    .preview-head small{color:var(--muted);font-size:.74rem}
+    .preview-text{font-size:.88rem;line-height:1.55;white-space:pre-wrap;word-break:break-word}
 
-    .card {
-      background: rgba(255,255,255,.92);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
+    .steps{margin:12px 0 0;padding:11px 12px;border-radius:14px;background:var(--gold-soft);color:var(--amber);font-size:.8rem;line-height:1.5}
+    .consent{margin:12px 2px 0;color:var(--muted);font-size:.75rem;line-height:1.5}
 
-    .hero {
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--radius-xl);
-      background: linear-gradient(145deg, #b90018, #f02034 58%, #ffb12d);
-      color: #fff;
-      padding: 20px;
-      min-height: 206px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: var(--shadow);
-      isolation: isolate;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 84% 8%, rgba(255,255,255,.34), transparent 28%), radial-gradient(circle at 10% 100%, rgba(255,255,255,.20), transparent 30%);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .hero-image {
-      position: absolute;
-      right: -26px;
-      bottom: -32px;
-      width: 190px;
-      border-radius: 28px;
-      overflow: hidden;
-      box-shadow: 0 20px 35px rgba(85,0,10,.25);
-      transform: rotate(-4deg);
-      border: 4px solid rgba(255,255,255,.32);
-    }
-    .hero-image img { width: 100%; height: 118px; object-fit: cover; object-position: center; }
-    .hero-text { position: relative; z-index: 2; max-width: 260px; }
-    .hero-kicker {
-      width: fit-content;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.18);
-      border: 1px solid rgba(255,255,255,.20);
-      color: rgba(255,255,255,.96);
-      font-size: .74rem;
-      font-weight: 900;
-      margin-bottom: 12px;
-    }
-    .hero h1 {
-      margin: 0;
-      font-size: clamp(2.05rem, 11vw, 3.25rem);
-      line-height: .92;
-      letter-spacing: -.07em;
-      font-weight: 900;
-    }
-    .hero p {
-      position: relative;
-      z-index: 2;
-      margin: 16px 0 0;
-      max-width: 265px;
-      font-size: .88rem;
-      color: rgba(255,255,255,.9);
-      font-weight: 600;
-    }
-
-    .content { padding: 18px; }
-    .content.more-pad { padding: 22px 18px 18px; }
-    .title-row { margin-bottom: 18px; }
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      margin-bottom: 10px;
-      border-radius: 999px;
-      padding: 7px 10px;
-      color: var(--red-dark);
-      background: var(--red-soft);
-      border: 1px solid rgba(215,9,33,.12);
-      font-size: .75rem;
-      font-weight: 900;
-    }
-    h2 {
-      margin: 0;
-      font-size: clamp(1.45rem, 7vw, 2.1rem);
-      line-height: 1.05;
-      letter-spacing: -.05em;
-      font-weight: 900;
-    }
-    .sub { margin: 8px 0 0; color: var(--muted); font-size: .92rem; font-weight: 600; }
-
-    .field { margin: 0 0 14px; }
-    label {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 8px;
-      color: #34343a;
-      font-size: .84rem;
-      font-weight: 900;
-    }
-    .hint { color: var(--muted); font-size: .78rem; font-weight: 700; margin-top: 8px; }
-
-    input, textarea {
-      width: 100%;
-      border: 1.6px solid rgba(31,31,36,.12);
-      border-radius: 18px;
-      background: #fff;
-      color: var(--ink);
-      outline: none;
-      padding: 15px 15px;
-      font-size: 1rem;
-      font-weight: 700;
-      transition: .18s ease;
-      box-shadow: 0 8px 20px rgba(31,31,36,.04);
-    }
-    input:focus, textarea:focus {
-      border-color: rgba(215,9,33,.70);
-      box-shadow: 0 0 0 4px rgba(215,9,33,.10), 0 8px 20px rgba(31,31,36,.04);
-    }
-    textarea { min-height: 180px; resize: vertical; line-height: 1.55; font-size: .94rem; font-weight: 600; }
-
-    .money { position: relative; }
-    .money b {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-      z-index: 2;
-      font-size: .92rem;
-      font-weight: 900;
-    }
-    .money input { padding-left: 48px; }
-
-    .split { display: grid; gap: 12px; }
-
-    .option-stack { display: grid; gap: 12px; }
-    .option {
-      position: relative;
-      width: 100%;
-      text-align: left;
-      border: 1.6px solid rgba(31,31,36,.10);
-      background: #fff;
-      border-radius: 24px;
-      padding: 16px 16px 16px 70px;
-      min-height: 88px;
-      box-shadow: 0 10px 26px rgba(31,31,36,.04);
-      transition: .18s ease;
-    }
-    .option:active { transform: scale(.99); }
-    .option.active {
-      border-color: rgba(215,9,33,.56);
-      background: linear-gradient(180deg, #fff, #fff5f6);
-    }
-    .option .icon {
-      position: absolute;
-      left: 14px;
-      top: 16px;
-      width: 42px;
-      height: 42px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      font-size: 1.35rem;
-      background: var(--gold-soft);
-    }
-    .option strong { display: block; font-size: 1rem; font-weight: 900; margin-bottom: 4px; }
-    .option span { display: block; color: var(--muted); font-size: .84rem; font-weight: 650; }
-
-    .impact {
-      display: none;
-      margin: 2px 0 16px;
-      border-radius: 22px;
-      padding: 14px;
-      background: linear-gradient(135deg, var(--green-soft), #fff);
-      color: var(--green);
-      border: 1px solid rgba(17,131,79,.18);
-      font-weight: 900;
-      text-align: center;
-    }
-    .impact.show { display: block; }
-    .impact small { display: block; margin-top: 4px; font-size: .77rem; color: rgba(17,131,79,.78); }
-
-    .templates { display: grid; gap: 10px; }
-    .template {
-      width: 100%;
-      text-align: left;
-      border: 1.4px solid rgba(31,31,36,.10);
-      background: #fff;
-      border-radius: 18px;
-      padding: 13px;
-      color: #2b2b31;
-      font-size: .9rem;
-      font-weight: 600;
-      line-height: 1.45;
-      box-shadow: 0 8px 18px rgba(31,31,36,.04);
-    }
-    .template.selected { border-color: rgba(215,9,33,.62); background: var(--red-soft); }
-    .mini-actions { display: flex; gap: 10px; margin: 0 0 14px; }
-
-    .preview {
-      background: #fff;
-      border: 1px solid rgba(31,31,36,.10);
-      border-radius: 24px;
-      padding: 15px;
-      box-shadow: 0 10px 24px rgba(31,31,36,.05);
-    }
-    .preview-head { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
-    .avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #f1f3f4;
-      color: #5f6368;
-      display: grid;
-      place-items: center;
-      font-weight: 900;
-    }
-    .stars { color: #f6b700; letter-spacing: 1px; font-size: 1.05rem; line-height: 1; margin-top: 2px; }
-    .preview-text { white-space: pre-wrap; color: #29292f; font-size: .93rem; font-weight: 600; }
-    .preview-tags { color: #2663d6; font-size: .84rem; font-weight: 800; word-break: break-word; margin-top: 12px; }
-
-    .error {
-      display: none;
-      margin-top: 8px;
-      color: var(--red-dark);
-      font-size: .8rem;
-      font-weight: 900;
-    }
-    .error.show { display: block; }
-
-    .btns { margin-top: auto; padding-top: 16px; display: grid; gap: 10px; }
-    .btn-row { display: grid; grid-template-columns: .82fr 1.18fr; gap: 10px; }
-    .btn {
-      border: 0;
-      min-height: 52px;
-      border-radius: 999px;
-      padding: 14px 16px;
-      font-size: .95rem;
-      font-weight: 900;
-      transition: .18s ease;
-      width: 100%;
-    }
-    .btn:active { transform: scale(.985); }
-    .btn-primary { color: #fff; background: linear-gradient(135deg, var(--red), var(--red-dark)); box-shadow: 0 13px 24px rgba(215,9,33,.24); }
-    .btn-primary:disabled { opacity: .75; cursor: wait; }
-    .btn-soft { color: var(--red-dark); background: var(--red-soft); border: 1px solid rgba(215,9,33,.14); }
-    .btn-ghost { color: #313136; background: #fff; border: 1px solid rgba(31,31,36,.12); }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: calc(18px + env(safe-area-inset-bottom));
-      transform: translate(-50%, 22px);
-      width: min(92vw, 420px);
-      border-radius: 18px;
-      background: rgba(31,31,36,.94);
-      color: #fff;
-      padding: 13px 15px;
-      box-shadow: 0 18px 42px rgba(0,0,0,.24);
-      opacity: 0;
-      pointer-events: none;
-      transition: .22s ease;
-      z-index: 50;
-      font-weight: 800;
-      font-size: .86rem;
-      text-align: center;
-    }
-    .toast.show { opacity: 1; transform: translate(-50%, 0); }
-
-    .tiny-note { margin: 13px 0 0; color: var(--muted); font-size: .75rem; font-weight: 650; text-align: center; }
-
-    @media (min-width: 560px) {
-      body { background-size: cover; }
-      .phone { padding-top: 20px; }
-      .topbar { border-radius: 0 0 24px 24px; margin-bottom: 14px; }
-    }
-
-    @media (max-width: 360px) {
-      .hero-image { width: 158px; right: -34px; }
-      .hero h1 { font-size: 1.86rem; }
-      .hero p { max-width: 230px; }
-      .content { padding: 16px; }
-      .btn-row { grid-template-columns: 1fr; }
-    }
+    .actionbar{position:sticky;bottom:0;z-index:9;display:grid;grid-template-columns:1fr 1.6fr;gap:8px;margin:0 -16px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:rgba(255,250,246,.95);backdrop-filter:blur(12px)}
+    .btn{min-height:52px;padding:12px 14px;border:0;border-radius:16px;font-weight:900;font-size:.97rem}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .btn-alt{background:#fff;border:1.5px solid var(--line);color:#463f3b}
+    .btn-main{background:linear-gradient(135deg,var(--red),#b8061b);color:#fff;box-shadow:0 10px 22px rgba(215,9,33,.24)}
+    .btn-main:not(:disabled):active{background:var(--red-dark)}
+    .toast{position:fixed;left:50%;bottom:90px;z-index:20;width:min(calc(100% - 28px),420px);padding:12px 14px;border-radius:14px;background:#1f1f24;color:#fff;font-size:.85rem;opacity:0;transform:translate(-50%,12px);pointer-events:none;transition:.2s}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .toast strong{display:block;margin-bottom:2px}
+    @media(min-width:600px){body{padding:20px 0}.phone{min-height:auto}}
   </style>
 </head>
 <body>
-  <main class="phone" aria-live="polite">
-    <header class="topbar">
-      <div class="store-row">
-        <div class="brand-mini">
-          <!-- Image checked: official Google Play Senheng app icon. It is related to Senheng and loads from play-lh.googleusercontent.com. -->
-          <img class="brand-icon" src="https://play-lh.googleusercontent.com/xpdDa6mGa883KgUuKIzrOnyfx_WIa34fxjJxmTNgAFRY2ufEwgejVggfN3dg9BjHxn7APS4SxbqTXQbKoXgJ=w240-h480" alt="Senheng" onerror="this.style.display='none'" />
-          <div class="brand-copy">
-            <strong>Senheng Kuala Terengganu</strong>
-            <span>Google Review S-Coin</span>
-          </div>
-        </div>
-        <div class="step-pill" id="stepPill">1 / 5</div>
+<main class="phone">
+  <header class="topbar">
+    <div class="store-row">
+      <div class="brand">
+        <img class="brand-icon" src="https://play-lh.googleusercontent.com/xpdDa6mGa883KgUuKIzrOnyfx_WIa34fxjJxmTNgAFRY2ufEwgejVggfN3dg9BjHxn7APS4SxbqTXQbKoXgJ=w240-h480" alt="" onerror="this.style.visibility='hidden'">
+        <div class="brand-copy"><strong>Senheng Kuala Terengganu</strong><span>Google Review Helper</span></div>
       </div>
-      <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
-    </header>
+      <div class="step-pill" id="stepLabel">1 / 3</div>
+    </div>
+    <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+  </header>
 
-    <section class="screen active" id="screen1" data-step="1">
+  <div class="content">
+    <section class="screen active" data-step="1">
       <div class="hero">
-        <div class="hero-text">
-          <div class="hero-kicker">⭐ Review 5 bintang</div>
-          <h1>Tulis review anda</h1>
-          <p>Isi beberapa maklumat ringkas, pilih ayat yang sesuai, kemudian buka Google Review.</p>
-        </div>
-        <div class="hero-image" aria-hidden="true">
-          <!-- Image checked: official Google Play screenshot showing Senheng app, My Rewards My Choice, S-Coin coins and rewards. Relevant to this S-Coin review page. -->
-          <img src="https://play-lh.googleusercontent.com/L16gIzHZOu1vDZH1nSdTxF_7GZXcKEIqcIcaPaVBSqbbwAuqLvcyhQHSZoLsqVT1DBG_Z6QK7XjRfeEY4CnR=w526-h296" alt="Senheng S-Coin Rewards" onerror="this.parentElement.style.display='none'" />
-        </div>
+        <span class="kicker">Kongsi pengalaman anda</span>
+        <h1>Tulis review dalam 1 minit</h1>
+        <p>Tap pengalaman anda, isi info ringkas, pilih ayat. Semua ayat boleh diedit.</p>
       </div>
 
-      <div class="card" style="margin-top:12px;">
-        <div class="content more-pad">
-          <div class="title-row">
-            <span class="eyebrow">Langkah pertama</span>
-            <h2>Masukkan kod staf yang membantu anda</h2>
-            <p class="sub">Kod ini akan diletakkan sebagai hashtag di hujung review.</p>
-          </div>
-          <div class="field">
-            <label for="staffCode">Kod staf</label>
-            <input id="staffCode" type="text" inputmode="text" autocomplete="off" placeholder="Contoh: SH9861" />
-            <div class="hint">Boleh taip SH9861, #SH9861, atau nombor sahaja.</div>
-            <div class="error" id="errStaff">Sila masukkan kod staf.</div>
-          </div>
-          <div class="btns">
-            <button class="btn btn-primary" type="button" onclick="validateStaff()">Mula tulis review →</button>
-            <p class="tiny-note">Review boleh diedit sebelum dihantar ke Google.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="screen" id="screen2" data-step="2">
       <div class="card">
-        <div class="content more-pad">
-          <div class="title-row">
-            <span class="eyebrow">Pilih pengalaman</span>
-            <h2>Hari ini anda buat yang mana?</h2>
-            <p class="sub">Pilih satu supaya ayat review lebih tepat dengan pengalaman anda.</p>
+        <div class="field" style="margin-bottom:0">
+          <div class="label"><span id="staffLabel">Kod staf yang bantu anda</span><small id="staffHint">Contoh: 9861</small></div>
+          <div class="staff-ok" id="staffLocked" hidden>
+            <div><small>✓ Kod staf dari link</small><b id="staffLockedCode"></b></div>
+            <button type="button" class="link" id="staffChange">Tukar</button>
           </div>
-          <div class="option-stack">
-            <button class="option active" type="button" id="modeEarn" onclick="setMode('earn')">
-              <span class="icon">💰</span>
-              <strong>Beli barang & dapat S-Coin</strong>
-              <span>Untuk pembelian yang ada S-Coin cashback.</span>
-            </button>
-            <button class="option" type="button" id="modeRedeem" onclick="setMode('redeem')">
-              <span class="icon">🎁</span>
-              <strong>Redeem S-Coin</strong>
-              <span>Untuk tebus barang atau jimat menggunakan S-Coin.</span>
-            </button>
-          </div>
-          <div class="btns">
-            <div class="btn-row">
-              <button class="btn btn-ghost" type="button" onclick="goStep(1)">← Kembali</button>
-              <button class="btn btn-primary" type="button" onclick="goStep(3)">Seterusnya →</button>
-            </div>
-          </div>
+          <div class="prefix" id="staffEdit"><span>SH</span><input id="staffDigits" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="10" placeholder="Masukkan nombor kod staf" aria-labelledby="staffLabel"></div>
+          <div class="error" id="staffError">Masukkan kod staf dulu (3–8 digit), kemudian tap pengalaman anda.</div>
         </div>
       </div>
-    </section>
 
-    <section class="screen" id="screen3" data-step="3">
       <div class="card">
-        <div class="content more-pad">
-          <div class="title-row">
-            <span class="eyebrow">Maklumat ringkas</span>
-            <h2 id="infoTitle">Apa barang yang anda beli?</h2>
-            <p class="sub" id="infoSub">Maklumat ini akan dimasukkan dalam ayat review.</p>
-          </div>
-
-          <div id="earnFields">
-            <div class="split">
-              <div class="field">
-                <label for="earnItem">Barang dibeli</label>
-                <input id="earnItem" type="text" placeholder="Contoh: TV, peti ais, aircond" oninput="updateImpact()" />
-              </div>
-              <div class="field">
-                <label for="earnPrice">Harga barang</label>
-                <div class="money"><b>RM</b><input id="earnPrice" type="text" inputmode="decimal" placeholder="0.00" oninput="updateImpact()" /></div>
-              </div>
-              <div class="field">
-                <label for="earnPercent">S-Coin cashback</label>
-                <input id="earnPercent" type="number" min="1" max="100" placeholder="Contoh: 50" oninput="updateImpact()" />
-                <div class="hint">Masukkan nombor sahaja. Contoh: 50 untuk 50%.</div>
-              </div>
-            </div>
-          </div>
-
-          <div id="redeemFields" style="display:none;">
-            <div class="split">
-              <div class="field">
-                <label for="redeemItem">Barang ditebus</label>
-                <input id="redeemItem" type="text" placeholder="Contoh: blender, kettle, voucher" oninput="updateImpact()" />
-              </div>
-              <div class="field">
-                <label for="redeemPoints">Jumlah S-Coin digunakan</label>
-                <input id="redeemPoints" type="number" min="1" placeholder="Contoh: 5000" oninput="updateImpact()" />
-                <div class="hint">100 S-Coin bersamaan RM1.00.</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="impact" id="impactBox"></div>
-          <div class="error" id="errInfo">Sila lengkapkan maklumat yang diperlukan.</div>
-
-          <div class="btns">
-            <div class="btn-row">
-              <button class="btn btn-ghost" type="button" onclick="goStep(2)">← Kembali</button>
-              <button class="btn btn-primary" type="button" onclick="validateInfo()">Pilih ayat →</button>
-            </div>
-          </div>
-        </div>
+        <span class="eyebrow">Langkah 1</span>
+        <h2>Apa yang anda dapat hari ni?</h2>
+        <p class="sub">Tap yang betul-betul berlaku.</p>
+        <div id="categoryList"></div>
+        <div class="error" id="categoryError">Pilih satu dulu.</div>
+        <div class="notice"><b>i</b><span>Review dari akaun yang sama dalam bulan yang sama dikira sekali sahaja. Guna akaun dan telefon sendiri.</span></div>
       </div>
     </section>
 
-    <section class="screen" id="screen4" data-step="4">
+    <section class="screen" data-step="2">
       <div class="card">
-        <div class="content more-pad">
-          <div class="title-row">
-            <span class="eyebrow">Pilih ayat</span>
-            <h2>Pilih ayat yang paling kena</h2>
-            <p class="sub">Boleh pilih cadangan, kemudian edit kalau perlu.</p>
-          </div>
-          <div class="mini-actions">
-            <button class="btn btn-soft" type="button" onclick="loadTemplates()">🔄 Tukar ayat</button>
-          </div>
-          <div class="templates" id="templateList"></div>
-          <div class="error" id="errTemplate">Sila pilih satu ayat terlebih dahulu.</div>
-          <div class="btns">
-            <div class="btn-row">
-              <button class="btn btn-ghost" type="button" onclick="goStep(3)">← Kembali</button>
-              <button class="btn btn-primary" type="button" onclick="validateTemplate()">Semak review →</button>
-            </div>
-          </div>
-        </div>
+        <span class="eyebrow">Langkah 2 · Info ringkas</span>
+        <h2 id="detailTitle">Butiran</h2>
+        <p class="sub">Isi info sebenar. Info ni akan masuk dalam ayat review.</p>
+        <div id="categoryNote"></div>
+        <div id="dynamicFields"></div>
+        <div class="error" id="detailsError">Lengkapkan maklumat yang diperlukan.</div>
       </div>
     </section>
 
-    <section class="screen" id="screen5" data-step="5">
+    <section class="screen" data-step="3">
+      <button type="button" class="link" id="backLink" style="margin:4px 0 0 -4px">← Ubah butiran</button>
+      <div class="card" style="margin-top:4px">
+        <span class="eyebrow">Langkah 3 · Pilih ayat</span>
+        <h2>Pilih satu yang paling kena</h2>
+        <p class="sub" id="sugStatus">3 ayat rawak untuk anda.</p>
+        <div class="options" id="optionList" role="radiogroup" aria-label="Pilihan ayat review"></div>
+        <button type="button" class="btn-swap" id="swapBtn">↻ Tunjuk 3 ayat lain</button>
+      </div>
+
       <div class="card">
-        <div class="content more-pad">
-          <div class="title-row">
-            <span class="eyebrow">Semak akhir</span>
-            <h2>Review anda sudah siap</h2>
-            <p class="sub">Tekan butang merah. Review akan di-copy dan Google Review akan dibuka terus.</p>
-          </div>
-          <div class="preview" style="margin-bottom:14px;">
-            <div class="preview-head">
-              <div class="avatar">G</div>
-              <div>
-                <strong>Google Review</strong>
-                <div class="stars">★★★★★</div>
-              </div>
-            </div>
-            <div class="preview-text" id="previewText"></div>
-            <div class="preview-tags" id="previewTags"></div>
-          </div>
-          <div class="field">
-            <label for="finalText">Edit review jika perlu</label>
-            <textarea id="finalText" oninput="syncPreview()"></textarea>
-          </div>
-          <div class="btns">
-            <div class="btn-row">
-              <button class="btn btn-ghost" type="button" onclick="goStep(4)">← Kembali</button>
-              <button class="btn btn-primary" id="copyBtn" type="button" onclick="copyThenOpen()">Copy & buka Google Review</button>
-            </div>
-            <p class="tiny-note">Lepas Google Review terbuka, paste review dan pilih 5 bintang.</p>
-          </div>
+        <span class="eyebrow">Semak & edit</span>
+        <div class="field" style="margin-bottom:0">
+          <div class="label"><label for="editor">Ayat review anda</label><small>Boleh ubah sendiri</small></div>
+          <textarea id="editor" rows="6"></textarea>
+          <div class="tags" aria-label="Hashtag tetap"><span class="tag" id="tagStaff"></span><span class="tag" id="tagStore"></span></div>
+          <p class="hint">2 hashtag ni ditambah sendiri di hujung. Hashtag lain yang ditaip akan dibuang.</p>
+          <div class="error" id="editorError">Ayat tak boleh kosong.</div>
         </div>
+        <div class="preview" aria-live="polite">
+          <div class="preview-head"><div class="avatar">G</div><div><strong>Preview Google Review</strong><small>Ini yang akan di-copy</small></div></div>
+          <div class="preview-text" id="finalText"></div>
+        </div>
+        <div class="steps"><b>Lepas copy:</b> pilih bintang ikut pengalaman sebenar → tekan lama ruang tulis → Paste → Post.</div>
+        <p class="consent">Dengan tekan copy, anda sahkan ayat ni berdasarkan pengalaman sendiri. Rating tetap pilihan anda, dan anda boleh batalkan bila-bila masa.</p>
       </div>
     </section>
-  </main>
+  </div>
 
-  <div class="toast" id="toast">Review di-copy. Membuka Google Review…</div>
+  <footer class="actionbar" id="actionbar" hidden>
+    <button class="btn btn-alt" id="altBtn" type="button">Kembali</button>
+    <button class="btn btn-main" id="mainBtn" type="button">Tunjuk ayat</button>
+  </footer>
+</main>
 
+<div class="toast" id="toast" role="status" aria-live="polite"><strong id="toastTitle"></strong><span id="toastText"></span></div>
+
+<script type="application/json" id="reviewData">
+{
+ "version": 1,
+ "updated": "2026-11",
+ "meta": {
+  "store": "Senheng Kuala Terengganu",
+  "language": "ms-MY casual",
+  "customer_note": "Customer pilih, edit dan hantar review guna akaun dan peranti sendiri, berdasarkan pengalaman sebenar.",
+  "monthly_rule": "Review berulang daripada akaun yang sama dalam bulan yang sama dikira sekali sahaja.",
+  "scoin_rate": "RM1 = 100 S-Coin",
+  "composition": "Setiap komen = pembuka + isi + (komen servis, rawak) + penutup. Dipilih rawak setiap kali page dibuka atau Tukar ayat ditekan."
+ },
+ "store_hashtag": "#SenhengKualaTerengganu",
+ "categories": {
+  "scoin_issuance": {
+   "label": "S-Coin Issuance",
+   "requirements": [
+    "Produk",
+    "Harga beli",
+    "Cashback %",
+    "Jumlah S-Coin & nilai RM"
+   ],
+   "required": [
+    "product",
+    "purchasePrice",
+    "cashbackPercent"
+   ],
+   "note": "S-Coin sah setahun dari tarikh dapat.",
+   "opener": "purchase",
+   "cores": [
+    "Akhirnya ambil {product} dengan harga {purchasePrice}, dan dapat S-Coin cashback {cashbackPercent}. Masuk {scoinCoins}, nilainya {scoinRM}.",
+    "Beli {product} {purchasePrice}. Staf bagitahu ada cashback {cashbackPercent} dalam bentuk S-Coin, jadi saya dapat {scoinCoins} bernilai {scoinRM}.",
+    "Harga {product} {purchasePrice}, dan sebab ada S-Coin cashback {cashbackPercent}, {scoinCoins} terus masuk akaun saya. Kira dalam {scoinRM}.",
+    "Saya bayar {purchasePrice} untuk {product}. Lepas tu dapat balik {scoinCoins} sebagai cashback {cashbackPercent}, lebih kurang {scoinRM}.",
+    "{product} yang saya beli harga {purchasePrice}. Cashback S-Coin {cashbackPercent} bagi saya {scoinCoins}, nilai {scoinRM}.",
+    "Staf kirakan siap-siap sebelum bayar: {product} {purchasePrice}, S-Coin cashback {cashbackPercent}, dapat {scoinCoins} atau {scoinRM}.",
+    "Ambil {product} masa ada S-Coin cashback {cashbackPercent}. Bayar {purchasePrice}, dapat {scoinCoins} yang bernilai {scoinRM}.",
+    "Untuk {product} harga {purchasePrice}, saya dapat {scoinCoins} hasil cashback {cashbackPercent}. Nilainya dalam {scoinRM}.",
+    "Lepas bayar {product} {purchasePrice}, terus dapat {scoinCoins}. Itu cashback {cashbackPercent}, bernilai {scoinRM}.",
+    "Pilih {product} sebab harga {purchasePrice} ngam dengan bajet, siap ada S-Coin cashback {cashbackPercent}. Dapat {scoinCoins}, nilai {scoinRM}.",
+    "Saya beli {product} {purchasePrice} dan dapat cashback {cashbackPercent}. Total {scoinCoins} masuk, kira-kira {scoinRM}.",
+    "{scoinCoins} masuk akaun lepas saya beli {product}. Harga {purchasePrice}, cashback {cashbackPercent}, nilai S-Coin tu {scoinRM}.",
+    "Cashback {cashbackPercent} untuk {product} ni agak banyak. Bayar {purchasePrice}, dapat {scoinCoins}, bersamaan {scoinRM}.",
+    "Bila tahu {product} harga {purchasePrice} ada S-Coin cashback {cashbackPercent}, saya terus decide beli. Dapat {scoinCoins}, nilai {scoinRM}.",
+    "Saya ambil {product}, {purchasePrice}. Dengan S-Coin cashback {cashbackPercent}, saya dapat {scoinCoins} yang bernilai {scoinRM}.",
+    "Bayar {purchasePrice}, bawa balik {product}, dan dapat {scoinCoins} sebagai bonus. Cashback {cashbackPercent} tu bernilai {scoinRM}.",
+    "Ingatkan cashback ni sikit je. Untuk {product} harga {purchasePrice} dengan {cashbackPercent}, rupanya dapat {scoinCoins}, dah {scoinRM}.",
+    "{product} saya beli {purchasePrice}. Staf tunjuk kiraan S-Coin: cashback {cashbackPercent}, jadi {scoinCoins}, nilai {scoinRM}.",
+    "Dapat {scoinCoins} hari ni. Itu cashback {cashbackPercent} dari {product} yang saya beli {purchasePrice}, bernilai {scoinRM}.",
+    "Beli {product} kat sini {purchasePrice}, siap dengan S-Coin cashback {cashbackPercent}. Masuk {scoinCoins}, dalam {scoinRM}.",
+    "Harga {purchasePrice} untuk {product} memang dalam bajet saya. Bonus pula S-Coin cashback {cashbackPercent}, {scoinCoins} bernilai {scoinRM}.",
+    "Saya beli {product} untuk rumah, {purchasePrice}. Cashback S-Coin {cashbackPercent} tu jadi {scoinCoins}, lebih kurang {scoinRM}.",
+    "Masa bayar {product} {purchasePrice}, staf terangkan saya dapat S-Coin cashback {cashbackPercent}. Jumlahnya {scoinCoins}, nilai {scoinRM}.",
+    "Kali ni saya beli {product}. Resit tulis {purchasePrice}, dan cashback {cashbackPercent} masuk sebagai {scoinCoins} yang bernilai {scoinRM}.",
+    "Tengah ada S-Coin cashback {cashbackPercent}, jadi saya ambil {product} {purchasePrice}. Dapat {scoinCoins}, iaitu {scoinRM}.",
+    "S-Coin yang saya dapat lepas beli {product} ({purchasePrice}) ialah {scoinCoins}. Itu dari cashback {cashbackPercent}, nilai {scoinRM}.",
+    "Beli {product} {purchasePrice}, dapat cashback {cashbackPercent}. Bila tengok jumlah S-Coin, {scoinCoins}, bernilai {scoinRM}.",
+    "Saya pilih beli {product} kat Senheng sebab ada S-Coin. Harga {purchasePrice}, cashback {cashbackPercent}, dapat {scoinCoins} ({scoinRM}).",
+    "Duit keluar {purchasePrice} untuk {product}, tapi {cashbackPercent} masuk balik sebagai S-Coin. Dapat {scoinCoins}, nilai {scoinRM}.",
+    "Staf check dulu {product} ni dapat cashback berapa. Rupanya {cashbackPercent}, jadi untuk harga {purchasePrice} saya dapat {scoinCoins} bernilai {scoinRM}."
+   ],
+   "closers": [
+    "S-Coin ni nanti boleh guna untuk redeem barang lain kat Senheng.",
+    "Saya nak kumpul dulu, bila dah cukup baru tebus barang.",
+    "Rasa berbaloi beli kat sini sebab ada balik sikit lepas bayar.",
+    "Next time datang, boleh guna S-Coin ni untuk redeem barang.",
+    "Sikit-sikit lama-lama jadi bukit, nanti boleh tebus barang free.",
+    "Dah ada plan nak redeem apa bila S-Coin cukup.",
+    "Bagi saya S-Coin ni macam simpanan kecil untuk lain kali.",
+    "Memang berbaloi, barang dapat, S-Coin pun dapat.",
+    "Kawan-kawan yang nak beli barang elektrik, boleh la beli kat Senheng dan kumpul S-Coin.",
+    "Tak sabar nak tengok boleh redeem apa dengan S-Coin ni.",
+    "Nanti nak kumpul lagi, sebab boleh tebus barang terus kat kedai.",
+    "Sebab tu la saya suka beli barang elektrik kat Senheng.",
+    "S-Coin ni saya simpan, nanti campur dengan yang akan datang untuk redeem barang.",
+    "S-Coin ni valid setahun, jadi saya plan guna sebelum luput.",
+    "Kalau rajin kumpul, boleh dapat barang free nanti.",
+    "Terima kasih Senheng, berbaloi datang.",
+    "Saya ingat nak guna S-Coin ni untuk tebus barang dapur nanti.",
+    "Untung beli kat sini, ada S-Coin yang boleh guna balik.",
+    "Next time ada nak beli barang elektrik, saya datang sini lagi.",
+    "Lepas ni saya nak rajin kumpul S-Coin.",
+    "Bila dah terkumpul nanti, boleh redeem barang tanpa keluar duit.",
+    "Berbaloi la, duit yang keluar ada pulang balik sikit dalam bentuk S-Coin.",
+    "Saya akan simpan S-Coin ni sampai cukup untuk barang yang saya berkenan.",
+    "Dalam setahun ni kalau datang beli lagi, S-Coin makin banyak dan boleh tebus barang.",
+    "Kena ingat S-Coin luput lepas setahun, jadi jangan simpan lama sangat. Saya dah ada target nak redeem apa."
+   ]
+  },
+  "scoin_redemption": {
+   "label": "S-Coin Redemption",
+   "requirements": [
+    "Barang yang ditebus",
+    "Nilai barang (RM)",
+    "S-Coin digunakan (RM × 100)"
+   ],
+   "required": [
+    "product",
+    "itemValue"
+   ],
+   "note": "Tebus barang terpilih 100% guna S-Coin, jadi barang ni free untuk anda. RM1 = 100 S-Coin.",
+   "opener": "redeem",
+   "cores": [
+    "Saya tebus {product} guna {redeemCoins}. Nilai barang {itemRM}, dan saya tak bayar sesen pun.",
+    "Baki S-Coin saya cukup untuk {product}, jadi terus redeem. Habis {redeemCoins} untuk barang bernilai {itemRM}.",
+    "Akhirnya dapat {product} free. Harga dia {itemRM}, saya tebus guna {redeemCoins}.",
+    "Staf check baki, cukup untuk {product}. Saya guna {redeemCoins}, nilai barang {itemRM}.",
+    "{product} bernilai {itemRM} saya bawa balik tanpa keluar duit. Semua ditebus guna {redeemCoins}.",
+    "Pilih {product} untuk redeem. Nilainya {itemRM}, jadi terpakai {redeemCoins}.",
+    "Guna {redeemCoins} untuk tebus {product}, barang yang nilainya {itemRM}.",
+    "Saya redeem {product} dengan {redeemCoins}. Kalau beli biasa, harga dia {itemRM}.",
+    "{redeemCoins} bertukar jadi {product}. Barang tu nilai {itemRM}, saya dapat percuma.",
+    "Tebus {product} hari ni. Nilai {itemRM}, guna {redeemCoins}, tak tambah duit langsung.",
+    "Redeem {product} kat kaunter, proses sekejap je. Terpakai {redeemCoins} untuk barang {itemRM}.",
+    "Staf bantu pilih barang ikut baki S-Coin. Saya ambil {product} bernilai {itemRM}, guna {redeemCoins}.",
+    "Dapat {product} hari ni tanpa bayar. Saya guna {redeemCoins}, sama dengan nilai barang {itemRM}.",
+    "Saya tebus {product} 100% guna S-Coin. Barang {itemRM}, jadi habis {redeemCoins}.",
+    "Tak sangka dah boleh tebus {product}. Barang tu {itemRM}, dan S-Coin yang ditolak {redeemCoins}.",
+    "Saya pilih {product} sebab memang tengah perlukan. Nilai {itemRM}, ditebus guna {redeemCoins}.",
+    "Untuk {product} yang bernilai {itemRM}, saya guna {redeemCoins}. Satu sen pun tak keluar.",
+    "Barang yang saya redeem ialah {product}. Nilai dia {itemRM}, dan S-Coin yang terpakai {redeemCoins}.",
+    "Habis {redeemCoins}, tapi dapat {product} bernilai {itemRM} free.",
+    "Staf terangkan kiraan: {product} {itemRM}, jadi perlu {redeemCoins}. Baki saya cukup, terus tebus.",
+    "{product} ni saya dapat dengan {redeemCoins} sahaja. Harga biasa {itemRM}.",
+    "Saya tukar {redeemCoins} kepada {product}. Barang bernilai {itemRM}, dapat free.",
+    "Tebus {product} ({itemRM}) dengan {redeemCoins}. Staf tunjuk baki yang tinggal sekali.",
+    "Redeem {product} guna {redeemCoins}. Barang {itemRM} tu saya dapat tanpa bayar apa-apa.",
+    "Kiraan dia mudah, RM1 sama dengan 100 S-Coin. Jadi {product} yang bernilai {itemRM} saya tebus guna {redeemCoins}.",
+    "Ambil {product} bernilai {itemRM}. Bayar 100% dengan {redeemCoins}.",
+    "Saya redeem {product}. Barang tu {itemRM}, dan saya guna {redeemCoins} untuk dapatkan dia free.",
+    "Dengan {redeemCoins}, saya dapat {product} yang harganya {itemRM}.",
+    "Urusan redeem {product} senang. Staf tolak {redeemCoins} dari baki, dan barang bernilai {itemRM} terus saya bawa balik.",
+    "Saya guna S-Coin yang dah lama terkumpul, {redeemCoins}, untuk tebus {product}. Nilai {itemRM}."
+   ],
+   "closers": [
+    "Semua ni hasil S-Coin yang saya kumpul dari beli barang kat Senheng sebelum ni.",
+    "Rasa macam dapat hadiah sebab setia beli kat sini.",
+    "Memang berbaloi kumpul S-Coin.",
+    "Lepas ni nak kumpul lagi untuk redeem barang lain pulak.",
+    "Yang selalu beli kat Senheng, jangan lupa check baki S-Coin.",
+    "Tak sangka S-Coin boleh tebus barang terus, ingatkan susah.",
+    "Puas hati, barang free hasil pembelian dulu-dulu.",
+    "Ni la untungnya beli barang elektrik kat Senheng.",
+    "Terima kasih Senheng, nanti saya datang lagi.",
+    "Barang free memang best, lagi-lagi bila dapat yang memang nak.",
+    "Rugi kalau S-Coin dibiar je tak guna.",
+    "Saya cadangkan semua yang ada S-Coin datang tengok pilihan barang redeem.",
+    "Lepas ni lagi rajin la saya beli kat Senheng.",
+    "S-Coin dari pembelian sebelum ni akhirnya ada guna.",
+    "Mula-mula ragu, sekarang dah percaya S-Coin ni betul-betul boleh pakai.",
+    "Pengalaman ni buat saya nak terus kumpul S-Coin.",
+    "Baki yang tinggal saya simpan untuk redeem lain kali.",
+    "Untung jadi customer Senheng.",
+    "Nasib baik sempat guna sebelum S-Coin luput, sebab valid setahun je.",
+    "Lain kali nak cuba redeem barang yang lebih besar pulak.",
+    "Siapa sangka beli barang dulu-dulu boleh bagi barang free hari ni.",
+    "Senang, dan memang free.",
+    "Recommend sangat untuk yang dah ada S-Coin terkumpul.",
+    "Yang ada S-Coin, check tarikh luput, sebab dia valid setahun dari tarikh dapat.",
+    "Memang berbaloi beli barang kat Senheng selama ni."
+   ]
+  },
+  "plusone_entitlement": {
+   "label": "PlusOne Warranty Entitlement",
+   "requirements": [
+    "Produk",
+    "Harga beli",
+    "Warranty kilang (tahun)"
+   ],
+   "required": [
+    "product",
+    "purchasePrice",
+    "factoryYears"
+   ],
+   "note": "Benefit Senheng PlusOne® Membership (yuran dari RM12, sah setahun). Barang besar atau lebih RM500 dapat extra 1 tahun warranty free atas warranty kilang. TV tak layak.",
+   "opener": "purchase",
+   "cores": [
+    "Beli {product} {purchasePrice}. Warranty kilang {factoryYears}, dan sebab saya member Senheng PlusOne, dapat extra setahun. Jadi total {totalYears}.",
+    "Warranty kilang untuk {product} ni {factoryYears}. Sebagai member PlusOne, saya dapat tambahan 1 tahun free, jadi semua {totalYears}.",
+    "Staf check {product} saya layak extra warranty PlusOne. Kilang bagi {factoryYears}, PlusOne tambah setahun, total {totalYears}.",
+    "Saya beli {product} harga {purchasePrice}. Kilang bagi {factoryYears}, member PlusOne dapat setahun lagi, jadi {totalYears}. Staf terangkan, kalau rosak dalam tahun tambahan tu, kos repair ditanggung sampai {purchasePrice}.",
+    "{product} saya sekarang ada warranty {totalYears}: {factoryYears} dari kilang, setahun lagi dari PlusOne. Extra warranty tu free untuk member.",
+    "Jadi member Senheng PlusOne, beli {product} terus dapat extra 1 tahun warranty. Asalnya {factoryYears}, sekarang {totalYears}.",
+    "Masa bayar {product}, staf tanya saya member PlusOne ke tak. Ya, jadi warranty {factoryYears} dari kilang ditambah setahun, total {totalYears}.",
+    "Yang saya suka, extra warranty PlusOne untuk {product} ni free. Warranty kilang {factoryYears}, campur PlusOne jadi {totalYears}.",
+    "Staf terangkan cara PlusOne untuk {product} yang saya beli {purchasePrice}. Lepas warranty kilang {factoryYears} habis, ada setahun lagi, jadi total {totalYears}. Kalau rosak masa tu, kos repair ditanggung ikut harga beli.",
+    "Beli {product} kat sini dapat extra 1 tahun warranty sebab saya member PlusOne. Total warranty {totalYears}, kilang cuma bagi {factoryYears}.",
+    "{product} harga {purchasePrice}, layak extra warranty PlusOne. Jadi {factoryYears} kilang tambah setahun, total {totalYears}.",
+    "Saya baru tahu member PlusOne dapat extra warranty untuk barang besar. {product} saya dapat {totalYears} semua, berbanding {factoryYears} dari kilang.",
+    "Yuran member PlusOne dari RM12 setahun je, dan untuk {product} ni saya dapat extra 1 tahun warranty. Kilang bagi {factoryYears}, jadi total {totalYears}.",
+    "Warranty {product} saya jadi {totalYears}. {factoryYears} dari kilang, setahun tambahan dari Senheng PlusOne, free.",
+    "Staf cakap kalau {product} rosak dalam tahun tambahan dan tak boleh repair sebab parts takde atau kos terlalu mahal, nanti boleh dapat baru. Warranty kilang {factoryYears}, dengan PlusOne jadi {totalYears}.",
+    "Beli {product} {purchasePrice}, dan sebab saya member PlusOne, warranty extra setahun. Daripada {factoryYears} jadi {totalYears}.",
+    "Untuk barang mahal macam {product}, extra warranty memang penting. Kilang bagi {factoryYears}, PlusOne tambah 1 tahun, total {totalYears}.",
+    "Saya renew member PlusOne sebelum beli {product}, jadi dapat extra warranty setahun. Warranty kilang {factoryYears}, total jadi {totalYears}.",
+    "{product} ni warranty kilang {factoryYears}. Member PlusOne macam saya dapat tambahan 1 tahun tanpa caj, jadi semua {totalYears}.",
+    "Staf check member saya masih aktif, terus {product} dapat extra warranty PlusOne. Asal {factoryYears}, sekarang {totalYears}.",
+    "Harga {product} {purchasePrice}. Selain warranty kilang {factoryYears}, saya dapat extra setahun dari PlusOne, total {totalYears}. Kalau rosak dalam tahun tu, repair ditanggung sampai nilai {purchasePrice}.",
+    "Dapat extra 1 tahun warranty untuk {product} sebab member PlusOne. Total {totalYears}, kilang {factoryYears} je.",
+    "Bila beli {product}, staf terangkan benefit member PlusOne: warranty kilang {factoryYears} dapat tambah setahun, jadi {totalYears}, free.",
+    "Saya ingat extra warranty kena bayar asing. Untuk member PlusOne rupanya free, {product} saya dari {factoryYears} jadi {totalYears}.",
+    "Member PlusOne dapat extra warranty untuk barang yang layak. {product} saya layak, warranty {factoryYears} jadi {totalYears}.",
+    "{product} yang saya ambil {purchasePrice} ni ada warranty {totalYears} sekarang. Setahun tu datang dari PlusOne, selebihnya {factoryYears} dari kilang.",
+    "Staf bagitahu, lepas warranty kilang {factoryYears} habis, PlusOne cover {product} setahun lagi. Jadi total {totalYears}, dan kos repair ditanggung ikut harga beli.",
+    "Untung jadi member PlusOne. {product} dapat warranty {totalYears} berbanding {factoryYears} biasa.",
+    "Saya beli {product} untuk rumah. Warranty kilang {factoryYears}, extra setahun dari PlusOne, total {totalYears}. Member tak payah bayar lebih untuk extra warranty ni.",
+    "Lepas daftar member PlusOne, beli {product} terus dapat extra warranty. {factoryYears} kilang ditambah 1 tahun, total {totalYears}."
+   ],
+   "closers": [
+    "Yuran member pun murah, dari RM12 setahun je.",
+    "Lega sikit, barang mahal macam ni ada warranty lebih lama.",
+    "Simpan resit elok-elok, nanti senang kalau nak claim.",
+    "Bagi saya, berbaloi jadi member PlusOne.",
+    "Harap tak perlu guna, tapi ada pun bagus.",
+    "Kalau rosak lepas warranty kilang habis, masih ada cover.",
+    "Ni antara sebab saya pilih beli kat Senheng.",
+    "Jangan lupa renew member setiap tahun kalau nak enjoy benefit ni.",
+    "Lepas ni beli barang besar lain pun saya beli sini.",
+    "Kawan-kawan yang selalu beli barang elektrik, baik daftar member PlusOne.",
+    "Senang hati bawa balik barang.",
+    "Barang elektrik ni kita tak tahu bila nak rosak, jadi tambahan setahun tu membantu.",
+    "Saya appreciate staf yang terangkan benefit member dengan jelas.",
+    "Duit yuran member tu dah terbalas dengan extra warranty ni.",
+    "Rasa lebih selamat beli barang mahal.",
+    "Kurang satu benda nak risau.",
+    "Terima kasih Senheng Kuala Terengganu.",
+    "Puas hati dengan pembelian kali ni.",
+    "Nanti saya recommend pada family.",
+    "Patut lebih ramai tahu pasal benefit member PlusOne ni.",
+    "Rasa dihargai sebagai member.",
+    "Jarang dapat warranty tambahan tanpa bayar asing.",
+    "Lagi tenang guna barang ni lama-lama.",
+    "Memang berbaloi beli kat Senheng.",
+    "Next time beli barang lain pun saya pastikan member masih aktif."
+   ]
+  },
+  "plusone_claim": {
+   "label": "PlusOne Warranty Claim",
+   "requirements": [
+    "Produk",
+    "Hasil claim: repair atau dapat baru"
+   ],
+   "required": [
+    "product",
+    "claimOutcome"
+   ],
+   "note": "Untuk barang yang rosak lepas warranty kilang habis, dalam extra 1 tahun PlusOne. Pilih apa yang betul-betul berlaku.",
+   "opener": "claim",
+   "cores": {
+    "repair": [
+     "{product} saya rosak lepas warranty kilang habis, tapi masih dalam extra setahun PlusOne. Staf terus proses claim, dan kos repair ditanggung.",
+     "Claim PlusOne untuk {product}. Warranty kilang dah tamat, jadi kos repair ditanggung bawah PlusOne ikut harga masa saya beli.",
+     "Staf check tarikh beli {product}, confirm masih dalam tempoh extra PlusOne. Barang dihantar repair, saya tak payah bayar.",
+     "Ingatkan kena tanggung sendiri kos repair {product} sebab warranty kilang dah habis. Rupanya PlusOne cover, repair ditanggung.",
+     "Bawa {product} dengan resit. Staf terangkan kos repair ditanggung PlusOne, hadnya ikut harga beli dulu.",
+     "{product} buat hal masa tahun tambahan PlusOne. Staf uruskan repair, dan kos dia ditanggung.",
+     "Warranty kilang {product} dah lepas, tapi sebab saya member PlusOne masa beli, ada extra setahun. Repair ditanggung terus.",
+     "Staf dengar masalah {product}, semak rekod PlusOne, lepas tu hantar repair. Kos repair tak keluar dari poket saya.",
+     "Claim PlusOne {product} senang. Staf terangkan kos repair ditanggung sampai nilai harga beli, dan bagitahu anggaran masa siap.",
+     "Masa beli {product} dulu saya member PlusOne, jadi dapat extra setahun warranty. Bila rosak dalam tempoh tu, repair ditanggung.",
+     "{product} saya dihantar repair bawah PlusOne. Staf bagi update, dan saya tak perlu bayar kos repair.",
+     "Kalau tak ada PlusOne, mesti saya kena bayar sendiri repair {product} ni. Kos tu ditanggung sebab masih dalam extra warranty.",
+     "Staf semak {product} dan rekod PlusOne depan saya. Masih dalam tempoh, jadi repair ditanggung.",
+     "Saya hantar {product} untuk claim PlusOne. Staf terangkan kos repair ditanggung ikut harga beli, dan apa yang cover.",
+     "{product} tiba-tiba tak berfungsi lepas warranty kilang habis. Staf confirm masih dalam extra setahun PlusOne, terus buka claim repair.",
+     "Claim PlusOne untuk {product} diterima. Barang dibaiki tanpa caj sebab masih dalam tempoh extra warranty.",
+     "Bawa resit dengan {product}, staf buat selebihnya. Claim PlusOne dibuka dan kos repair ditanggung.",
+     "Saya tak pasti {product} masih boleh claim. Staf semak, masih dalam extra setahun PlusOne, jadi repair ditanggung.",
+     "Proses claim PlusOne {product} teratur. Staf hantar repair, kos ditanggung, dan saya tahu bila nak datang ambil.",
+     "Staf terangkan, PlusOne tanggung kos repair {product} sampai nilai masa saya beli. Lega dengar macam tu."
+    ],
+    "replace": [
+     "{product} saya rosak masa tempoh extra PlusOne. Parts takde, tak boleh repair, jadi saya dapat tukar baru.",
+     "Claim PlusOne untuk {product}. Kos repair terlalu mahal, jadi staf uruskan tukar baru dengan spec yang setara.",
+     "Staf check {product}, confirm masih dalam extra setahun PlusOne. Bila tak boleh repair, saya dapat barang baru.",
+     "Warranty kilang {product} dah habis, tapi PlusOne masih cover. Repair tak dapat dibuat sebab parts takde, akhirnya dapat tukar baru.",
+     "Masa beli {product} dulu staf cakap kalau rosak takleh repair, boleh dapat baru. Memang betul, claim PlusOne saya dapat tukar baru.",
+     "Repair {product} ambil masa terlalu lama sebab tunggu parts. Bawah PlusOne, saya dapat tukar baru.",
+     "Ingatkan dah kena beli baru guna duit sendiri. Rupanya {product} masih bawah PlusOne, dan sebab tak boleh repair, saya dapat ganti baru.",
+     "Claim PlusOne {product} saya berakhir dengan tukar baru. Model dia ikut spec semasa yang setara.",
+     "Staf terangkan dari awal, kalau {product} tak boleh repair, PlusOne bagi tukar baru. Itu yang jadi pada saya.",
+     "{product} rosak lepas warranty kilang tamat. Parts tak ada, jadi bawah PlusOne saya dapat yang baru.",
+     "Kos baiki {product} terlalu tinggi, jadi staf proses tukar baru bawah PlusOne.",
+     "Saya bawa {product} untuk claim PlusOne. Tak boleh repair, dan saya dapat barang baru dengan spec yang sama level.",
+     "Bersyukur ada PlusOne. {product} tak dapat dibaiki, tapi saya dapat tukar baru.",
+     "Lepas semakan, {product} saya tak boleh repair. Sebab masih dalam extra setahun PlusOne, saya dapat ganti baru.",
+     "{product} saya rosak dan tak boleh repair. Staf jelaskan barang ganti bawah PlusOne ikut harga dan spec semasa, dan memang saya dapat yang setara.",
+     "Claim PlusOne untuk {product}. Mula-mula hantar repair, bila parts takde, staf tukar kepada barang baru.",
+     "{product} saya diganti baru bawah PlusOne sebab kerosakan tak boleh dibaiki.",
+     "Saya tak sangka claim PlusOne boleh sampai tukar baru. {product} tak boleh repair, jadi dapat ganti.",
+     "Masih dalam tempoh extra PlusOne masa {product} rosak. Repair tak berbaloi, jadi dapat tukar baru.",
+     "Staf uruskan claim PlusOne untuk {product} dari mula. Bila confirm tak boleh repair, saya dapat barang baru."
+    ]
+   },
+   "closers": [
+    "Bersyukur dulu dapat PlusOne masa beli.",
+    "Jimat duit, tak payah keluar sendiri.",
+    "Baru nampak gunanya PlusOne.",
+    "Simpan resit memang penting.",
+    "Tak perlu pusing sana sini.",
+    "Lega, tak perlu tertanya-tanya status claim.",
+    "Ni antara sebab saya akan terus beli barang kat Senheng.",
+    "Yang beli barang elektrik, ambil tahu la pasal PlusOne.",
+    "Pengalaman claim yang tak menyusahkan.",
+    "Terima kasih staf yang bantu.",
+    "Warranty tambahan ni memang ada fungsi.",
+    "Tak sangka urusan claim boleh semudah ni.",
+    "Kurang stress bila staf yang uruskan.",
+    "Rasa dilindungi sebagai customer.",
+    "Lepas ni saya pastikan member PlusOne sentiasa renew.",
+    "Puas hati dengan cara claim diuruskan.",
+    "Saya tunggu update je lepas ni.",
+    "Patut ramai lagi tahu pasal PlusOne ni.",
+    "Yuran member dari RM12 setahun tu memang berbaloi.",
+    "Tak menyesal beli kat Senheng dulu.",
+    "Senang hati bila tahu barang ada yang cover.",
+    "Kalau tak, mesti dah kena bayar sendiri.",
+    "Layanan masa claim pun sama baik macam masa beli.",
+    "Terima kasih Senheng Kuala Terengganu.",
+    "Urusan selesai lebih cepat dari jangkaan."
+   ],
+   "variant": "claimOutcome"
+  },
+  "replacement_entitlement": {
+   "label": "Replacement Warranty Entitlement",
+   "requirements": [
+    "Produk",
+    "Harga barang (bawah RM400)",
+    "Harga RW"
+   ],
+   "required": [
+    "product",
+    "purchasePrice",
+    "rwPrice"
+   ],
+   "note": "RW add-on berbayar untuk small appliance bawah RM400. Warranty asal 1 tahun + RW 1 tahun = 2 tahun. Rosak dalam 2 tahun, tukar baru.",
+   "opener": "purchase",
+   "cores": [
+    "Saya tambah RW {rwPrice} untuk {product}. Warranty asal 1 tahun, RW tambah 1 tahun lagi, jadi 2 tahun. Kalau rosak dalam tempoh tu, terus tukar baru.",
+    "Staf terangkan RW masa saya beli {product} {purchasePrice}. Tambah {rwPrice} je, warranty setahun jadi 2 tahun, dan kalau rosak dalam 2 tahun dapat tukar baru.",
+    "Untuk {product} ni saya ambil RW, bayar {rwPrice}. Warranty 1 tahun + 1 tahun, total 2 tahun. Rosak dalam masa tu, tukar baru.",
+    "{product} sekarang ada warranty 2 tahun sebab saya tambah RW {rwPrice}. Asalnya setahun je. Kalau rosak, dapat tukar baru.",
+    "Saya ambil add-on RW untuk {product}. Dengan {rwPrice}, warranty yang asal 1 tahun jadi 2 tahun, dan rosak boleh tukar baru.",
+    "Tambah RW {rwPrice} untuk {product}: setahun warranty asal, setahun lagi dari RW. Dalam 2 tahun kalau rosak, tukar baru.",
+    "Lepas tambah RW {rwPrice}, warranty {product} jadi 2 tahun berbanding setahun sebelum ni. Rosak dalam tempoh tu, dapat tukar baru.",
+    "Staf offer RW untuk {product}. Tambah {rwPrice}, warranty dari 1 tahun ke 2 tahun. Kalau rosak, tukar baru terus kat kedai.",
+    "Saya pilih tambah RW untuk {product} sebab kalau rosak dalam 2 tahun boleh tukar baru. Caj RW {rwPrice} je, warranty asal cuma 1 tahun.",
+    "{product} {purchasePrice}, tambah RW {rwPrice}. Warranty asal 1 tahun, tambah 1 tahun, jadi 2 tahun semua. Rosak, tukar baru.",
+    "Caj RW {rwPrice} untuk {product} staf bagitahu awal. Dengan bayaran tu, warranty setahun jadi 2 tahun dan rosak boleh tukar baru.",
+    "Saya ambil RW sekali dengan {product}, tambah {rwPrice}. Warranty biasa setahun, dengan RW jadi 2 tahun. Kalau ada rosak, tukar baru.",
+    "Untuk small appliance macam {product}, saya tambah RW {rwPrice}. Warranty 1 tahun jadi 2 tahun, dan rosak dalam tempoh dapat tukar baru.",
+    "Beli {product} dengan RW {rwPrice}. Kalau rosak dalam 2 tahun, terus tukar baru. Tanpa RW, warranty dia setahun je.",
+    "Staf terang ringkas: tambah RW {rwPrice}, warranty {product} dari setahun jadi 2 tahun, rosak dalam tempoh tu tukar baru. Saya fikir sekejap, lepas tu ambil.",
+    "Saya tambah RW untuk {product}, {rwPrice}. Setahun dari pengeluar, setahun lagi dari RW. Rosak dalam 2 tahun, dapat tukar baru.",
+    "RW {rwPrice} yang saya ambil untuk {product} bagi warranty 2 tahun, berbanding 1 tahun asal. Rosak, tukar baru.",
+    "Saya jarang ambil add-on, tapi RW untuk {product} ni senang faham. Tambah {rwPrice}, warranty 1 tahun jadi 2 tahun, rosak tukar baru.",
+    "Bayar {rwPrice} untuk RW, {product} saya dapat warranty 2 tahun (1 tahun asal + 1 tahun RW). Rosak dalam tempoh, tukar baru.",
+    "Tambah RW {rwPrice} masa bayar {product}. Warranty asal 1 tahun, RW tambah setahun. Total 2 tahun, kalau rosak tukar baru.",
+    "Kira senang je: warranty {product} 1 tahun, tambah RW {rwPrice} dapat 1 tahun lagi, jadi 2 tahun. Dalam tempoh tu kalau rosak, dapat tukar baru.",
+    "Saya ambil RW untuk {product} lepas staf bagitahu caj dia {rwPrice}. Warranty setahun jadi 2 tahun, dan rosak boleh tukar baru.",
+    "{product} saya beli {purchasePrice}, siap dengan RW {rwPrice}. Warranty yang biasanya 1 tahun dah jadi 2 tahun. Kalau rosak, tukar baru.",
+    "Dengan RW {rwPrice}, {product} ni ada warranty 2 tahun. Setahun asal, setahun tambahan. Rosak dalam tempoh tu, dapat tukar baru.",
+    "Orang rumah suruh ambil RW untuk {product}. Tambah {rwPrice}, warranty setahun jadi 2 tahun, rosak boleh tukar baru.",
+    "Staf bagitahu ada RW untuk {product}, {rwPrice}. Saya tambah, jadi warranty asal 1 tahun naik ke 2 tahun. Rosak dalam 2 tahun, tukar baru.",
+    "RW untuk {product} dah ambil, {rwPrice}. Dalam 2 tahun kalau rosak, tukar baru. Asal warranty 1 tahun je.",
+    "Saya tambah RW {rwPrice} sebab {product} ni hari-hari guna. Warranty asal 1 tahun, dengan RW jadi 2 tahun, rosak tukar baru.",
+    "Ambil RW untuk {product} kat Senheng Kuala Terengganu, tambah {rwPrice}. Warranty jadi 2 tahun dari setahun, kalau rosak tukar baru.",
+    "Lepas fikir-fikir, saya ambil RW {rwPrice} untuk {product}. Warranty asal setahun, sekarang dah 2 tahun. Kalau ada rosak, bawa ke kedai, tukar baru."
+   ],
+   "closers": [
+    "Bayar sikit sekarang, senang hati kemudian.",
+    "Tak payah tunggu repair kalau ada apa-apa.",
+    "Harap tak perlu guna, tapi ada pun bagus.",
+    "Untuk barang yang hari-hari guna, memang berbaloi.",
+    "Saya anggap macam insurans kecil untuk barang ni.",
+    "Dapat peace of mind, tak la risau sangat.",
+    "Caj tambahan tu reasonable untuk perlindungan 2 tahun.",
+    "Lepas ni beli small appliance lain pun saya akan tambah RW.",
+    "Staf cakap kalau rosak, bawa ke outlet dan boleh terus pilih barang baru masa tu juga.",
+    "Staf terangkan syarat dengan jelas, jadi saya tak ragu.",
+    "Kurang satu benda nak risau.",
+    "Tak rugi ambil.",
+    "Berbaloi untuk barang yang selalu guna.",
+    "Recommend untuk yang beli small appliance.",
+    "Rasa lebih tenang guna barang ni.",
+    "Saya puas hati dengan pilihan ni.",
+    "Kalau rosak pun, dah tahu nak buat apa.",
+    "Terima kasih staf yang explain.",
+    "Barang kecil pun boleh rosak awal, jadi RW ni membantu.",
+    "Yang best, masa tukar nanti boleh pilih model lain kalau nak.",
+    "Malas nak pening kepala kemudian.",
+    "Bayar sikit je, berbaloi untuk 2 tahun.",
+    "Rasa keputusan ni betul.",
+    "Ni kali pertama saya ambil RW, rasa berbaloi.",
+    "Simpan resit, senang nanti."
+   ]
+  },
+  "replacement_claim": {
+   "label": "Replacement Warranty Claim",
+   "requirements": [
+    "Produk",
+    "Rosak dalam tempoh 2 tahun",
+    "Dapat tukar baru"
+   ],
+   "required": [
+    "product"
+   ],
+   "note": "Untuk barang yang ada RW dan rosak dalam tempoh 2 tahun.",
+   "opener": "claim",
+   "cores": [
+    "{product} saya rosak, masih dalam 2 tahun sebab ada RW. Staf semak dan saya dapat tukar baru.",
+    "Saya claim RW untuk {product}. Rosak dalam tempoh 2 tahun, jadi terus dapat tukar baru.",
+    "Warranty asal {product} setahun dah habis, tapi RW cover sampai 2 tahun. Bila rosak, dapat tukar baru.",
+    "Bawa {product} yang rosak dengan resit. Staf confirm masih dalam 2 tahun RW, dan saya dapat unit baru.",
+    "Sebab ada RW, {product} yang rosak dalam 2 tahun tu ditukar baru. Tak payah tunggu repair.",
+    "Staf check {product}, confirm rosak dan masih dalam tempoh 2 tahun. Saya dapat tukar baru.",
+    "Claim RW untuk {product} lulus. Rosak sebelum cukup 2 tahun, jadi dapat yang baru.",
+    "{product} tiba-tiba tak boleh guna. Nasib baik ada RW, rosak dalam 2 tahun boleh tukar baru.",
+    "Masa ambil RW dulu ragu-ragu juga. Bila {product} rosak dalam 2 tahun dan dapat tukar baru, baru rasa berbaloi.",
+    "Saya hantar {product} untuk claim RW. Masih dalam 2 tahun, jadi staf uruskan tukar baru.",
+    "RW memang berfungsi. {product} rosak dalam 2 tahun, dan saya dapat tukar baru tanpa bayar.",
+    "{product} rosak lepas setahun lebih. Warranty asal dah tamat, tapi RW sambung sampai 2 tahun. Dapat tukar baru.",
+    "Staf semak rekod RW untuk {product}. Masih dalam 2 tahun, jadi barang tu ditukar baru.",
+    "Ingatkan kena hantar repair berminggu. Sebab ada RW, {product} saya terus ditukar baru, masih dalam 2 tahun.",
+    "Claim RW untuk {product}. Rosak dalam 2 tahun, staf semak dan terus bagi tukar baru on the spot.",
+    "Saya datang dengan {product} yang dah tak berfungsi. Staf check, semak RW, masih dalam 2 tahun, jadi dapat tukar baru.",
+    "Dapat {product} baru lepas claim RW. Yang lama rosak dalam tempoh 2 tahun.",
+    "Dulu tambah RW untuk {product}, warranty jadi 2 tahun. Bila rosak, betul-betul dapat tukar baru.",
+    "{product} saya rosak sebelum cukup 2 tahun. RW cover, staf uruskan tukar baru.",
+    "Claim RW {product} diterima masa tu juga. Masih dalam 2 tahun, terus pilih barang baru dan bawa balik.",
+    "Bawa {product} ke outlet, staf semak RW. Rosak dalam 2 tahun, jadi tukar baru, dan saya boleh pilih model yang saya nak.",
+    "Lepas {product} rosak, saya terus ke Senheng. RW masih aktif dalam 2 tahun, dapat tukar baru on the spot.",
+    "RW yang saya ambil dulu akhirnya berguna. {product} rosak dalam 2 tahun, dapat tukar baru.",
+    "Proses claim RW untuk {product} straightforward. Rosak dalam 2 tahun, staf semak, lepas tu tukar baru.",
+    "Pertama kali saya guna RW. {product} buat hal sebelum 2 tahun, dan saya dapat tukar baru tanpa bayar.",
+    "Staf terangkan proses RW dengan jelas. {product} saya yang rosak dalam 2 tahun ditukar baru.",
+    "Mula-mula risau claim ditolak. Rupanya mudah, {product} rosak dalam 2 tahun dan RW bagi tukar baru.",
+    "Saya tunjuk resit {product} dan terangkan masalah. Masih dalam 2 tahun RW, jadi dapat tukar baru. Saya ambil model lain yang saya lagi berkenan.",
+    "Barang yang hari-hari guna macam {product} ni memang susah bila rosak. Ada RW, rosak dalam 2 tahun, dapat tukar baru.",
+    "Hari ni pergi claim RW. {product} rosak dalam 2 tahun, staf layan baik dan saya dapat tukar baru."
+   ],
+   "closers": [
+    "Memang berbaloi ambil RW masa beli dulu.",
+    "Tak keluar duit repair langsung.",
+    "Lega, boleh guna balik macam biasa.",
+    "Untuk yang tengah fikir nak ambil RW ke tak, ambil la.",
+    "Tak perlu ulang-alik banyak kali.",
+    "Masalah selesai dengan cepat.",
+    "Lepas ni beli small appliance lain pun saya ambil RW.",
+    "Simpan resit memang penting.",
+    "Puas hati dengan RW.",
+    "Kena la dengan apa yang staf terangkan masa beli.",
+    "Duit yang saya bayar untuk RW dulu memang berbaloi.",
+    "Lagi senang dari cari kedai repair sendiri.",
+    "Terima kasih Senheng Kuala Terengganu.",
+    "Tak sangka urusan tukar baru semudah ni.",
+    "Recommend RW untuk small appliance.",
+    "Saya akan terus beli kat Senheng lepas ni.",
+    "Siap on the spot, tak payah tunggu repair berminggu-minggu.",
+    "Benda macam ni yang buat saya percaya beli kat sini.",
+    "Boleh pilih model yang saya nak masa tukar, itu yang saya suka.",
+    "Pengalaman yang baik walaupun mula-mula barang rosak.",
+    "Bersyukur dulu dengar cakap staf ambil RW.",
+    "Dapat barang baru tanpa bayar lagi.",
+    "Kurang stress bila tahu ada RW.",
+    "Proses jelas dari mula sampai dapat barang.",
+    "Next time saya tetap pilih RW."
+   ]
+  }
+ },
+ "openers": {
+  "purchase": [
+   "Singgah Senheng Kuala Terengganu petang tadi.",
+   "Dah lama survey barang ni, hari ni baru datang Senheng Kuala Terengganu.",
+   "Datang Senheng Kuala Terengganu dengan family hujung minggu ni.",
+   "Barang lama kat rumah dah uzur, jadi saya datang cari pengganti kat Senheng Kuala Terengganu.",
+   "Kedai ni dekat dengan rumah, sebab tu saya selalu beli barang elektrik kat sini.",
+   "Mula-mula datang Senheng Kuala Terengganu nak tengok-tengok je.",
+   "Kawan recommend beli kat Senheng Kuala Terengganu.",
+   "Pagi tadi saya pergi Senheng Kuala Terengganu.",
+   "Ni kali kedua saya beli barang kat outlet ni.",
+   "Dah banding harga kat beberapa tempat sebelum datang sini.",
+   "Baru pindah rumah, jadi banyak barang elektrik kena beli.",
+   "Saya memang customer tetap Senheng.",
+   "Singgah Senheng lepas kerja, masa tu tak ramai orang.",
+   "Nampak promo Senheng kat media sosial, terus datang outlet Kuala Terengganu.",
+   "Mak minta tolong belikan barang untuk rumah dia, jadi saya ke Senheng Kuala Terengganu.",
+   "Sampai je kedai, staf terus tegur dan tanya nak cari apa.",
+   "Tak plan pun nak beli apa-apa hari ni.",
+   "Dah lama simpan duit untuk beli barang ni.",
+   "Outlet Senheng Kuala Terengganu ni luas, senang nak tengok barang.",
+   "Hari ni ambil cuti, sempat la pergi Senheng.",
+   "Saya pergi Senheng Kuala Terengganu nak cari barang yang ikut bajet.",
+   "Kalau beli barang elektrik, saya suka datang tengok sendiri dulu.",
+   "Orang rumah ajak pergi Senheng Kuala Terengganu petang ni.",
+   "Pertama kali beli kat Senheng Kuala Terengganu.",
+   "Datang awal pagi, kedai baru buka.",
+   "Barang yang lama dah rosak, nak tak nak kena beli baru.",
+   "Hujung bulan baru ada masa nak keluar beli barang.",
+   "Lalu depan Senheng Kuala Terengganu, teringat ada barang nak beli.",
+   "Sebelum beli, saya tanya staf macam-macam dulu.",
+   "Lama dah tak masuk Senheng, hari ni singgah sebab memang ada barang nak cari."
+  ],
+  "redeem": [
+   "Singgah Senheng Kuala Terengganu nak check baki S-Coin.",
+   "Dah lama S-Coin saya terperap, tak pernah guna.",
+   "Selama ni beli barang kat Senheng, S-Coin pun terkumpul sikit-sikit.",
+   "Hari ni datang Senheng Kuala Terengganu khas nak redeem barang.",
+   "Kawan cakap S-Coin boleh tebus barang terus kat kedai, saya pun cuba.",
+   "Saya selalu beli barang elektrik kat Senheng, jadi S-Coin memang dah banyak.",
+   "Staf pernah bagitahu S-Coin saya dah cukup untuk tebus barang.",
+   "Petang tadi datang Senheng Kuala Terengganu dengan niat nak guna S-Coin.",
+   "Dulu tak ambil kisah sangat pasal S-Coin.",
+   "Bila check baki S-Coin, rupanya dah banyak terkumpul.",
+   "Lama tak datang Senheng, hari ni singgah sekejap.",
+   "Orang rumah ingatkan saya ada S-Coin yang belum guna.",
+   "Dah lama kumpul S-Coin dari setiap kali beli barang.",
+   "Saya memang plan nak guna S-Coin bila dah cukup.",
+   "Singgah Senheng Kuala Terengganu lepas kerja.",
+   "Pilihan barang untuk redeem S-Coin kat outlet ni banyak juga.",
+   "Mula-mula ragu juga boleh ke tebus barang guna S-Coin je.",
+   "Datang Senheng Kuala Terengganu hujung minggu.",
+   "Sampai kedai, terus tanya staf pasal redeem S-Coin.",
+   "Selalu dengar orang cerita pasal redeem S-Coin, hari ni baru cuba sendiri."
+  ],
+  "claim": [
+   "Barang saya buat hal minggu lepas.",
+   "Pagi tadi bawa barang yang rosak ke Senheng Kuala Terengganu.",
+   "Mula-mula risau juga bila barang tiba-tiba tak boleh guna.",
+   "Dah cari resit lama, nasib baik masih simpan.",
+   "Ingatkan kena hantar repair kat luar dan bayar sendiri.",
+   "Datang Senheng Kuala Terengganu dengan barang yang ada masalah.",
+   "Barang ni memang hari-hari guna, jadi bila rosak terus rasa susah.",
+   "Saya call outlet dulu, staf suruh bawa terus ke kedai.",
+   "Tak pernah claim warranty sebelum ni, jadi tak tahu apa nak expect.",
+   "Bila barang rosak, benda pertama saya buat ialah cari resit.",
+   "Masa beli dulu saya tak fikir pun akan guna warranty.",
+   "Singgah outlet Senheng Kuala Terengganu petang tadi untuk urusan claim.",
+   "Rosak tiba-tiba, tak ada tanda apa-apa sebelum tu.",
+   "Kawan cakap Senheng senang urus claim, jadi saya cuba.",
+   "Saya bawa barang yang rosak dengan resit sekali.",
+   "Sampai kedai, staf tanya dulu masalah apa.",
+   "Saya ingat tempoh warranty dah tamat.",
+   "Hari ni ada urusan claim kat Senheng Kuala Terengganu.",
+   "Barang ni saya beli kat Senheng juga dulu.",
+   "Agak kecewa bila barang rosak awal."
+  ]
+ },
+ "service": [
+  "Staf yang layan peramah dan tak kelam-kabut.",
+  "Staf terangkan satu-satu sampai saya faham.",
+  "Tak payah tunggu lama kat kaunter.",
+  "Kedai bersih dan selesa.",
+  "Staf sabar jawab soalan saya yang banyak.",
+  "Layanan staf memang baik.",
+  "Staf pun cepat buat kerja.",
+  "Semua urusan siap dalam masa singkat.",
+  "Staf tak tergesa-gesa, bagi saya masa nak fikir.",
+  "Saya appreciate staf yang bantu hari ni.",
+  "Cara staf explain senang faham.",
+  "Masa saya sampai agak ramai orang, tapi staf tetap layan elok.",
+  "Staf mesra, siap senyum lagi.",
+  "Proses kat kaunter lancar.",
+  "Staf bagi info yang jelas, tak berbelit.",
+  "Staf tolong check semua dalam sistem depan saya.",
+  "Saya rasa dilayan dengan baik dari mula sampai habis.",
+  "Staf jawab dengan yakin, nampak dia memang tahu.",
+  "Suasana kedai tenang, tak sesak.",
+  "Staf pandai terang dalam bahasa mudah.",
+  "Dokumen semua staf yang tolong uruskan.",
+  "Staf tak buat saya tunggu lama.",
+  "Tak rasa macam kena layan acuh tak acuh.",
+  "Staf terangkan syarat dengan jujur.",
+  "Saya datang tanpa appointment, staf tetap layan terus.",
+  "Servis kat outlet ni memang konsisten.",
+  "Terima kasih kepada staf yang bertugas.",
+  "Staf ulang balik maklumat penting supaya saya tak lupa.",
+  "Tak ada istilah teknikal yang buat pening.",
+  "Staf layan dengan sopan walaupun masa tu dah dekat waktu tutup."
+ ],
+ "plusone_claim_outcomes": [
+  {
+   "id": "repair",
+   "label": "Repair, kos ditanggung"
+  },
+  {
+   "id": "replace",
+   "label": "Tak boleh repair, dapat baru"
+  }
+ ]
+}
+</script>
 <script>
-  const PLACE_ID = "ChIJzxZKpna-tzER4-OBkjPlxeI";
-  const GOOGLE_REVIEW_URL = `https://search.google.com/local/writereview?placeid=${PLACE_ID}`;
-  const MANDATORY_HASHTAGS = "#SCoinRedemption #SCoin #SCoinCashback #Cashback #SenhengKualaTerengganu";
-  const COMMENT_BANK = {"earn": ["Baru selesai beli {item} dengan harga {price}. Lagi best bila dapat S-Coin cashback {percent} bernilai {netValue}. Memang satu bonus. Memang rasa berbaloi dan mudah nak recommend.", "Hari ni angkat {item} pada harga {price}. S-Coin cashback {percent} bernilai {netValue} buat harga tu terasa lebih berbaloi. Rasa macam kecil-kecil reward, lama-lama boleh jadi besar.", "Datang survey {item}, akhirnya terus beli sebab harga {price} memang kena. S-Coin cashback {percent} nilai {netValue} buat rasa macam duit belanja ada pulangan semula. Mudah faham, mudah guna, dan memang terasa manfaat dia.", "Memang puas hati dapat bawa balik {item} dengan harga {price}. S-Coin cashback {percent} yang jadi {netValue} tu memang bonus yang susah nak abaikan. Bagi saya, ini antara cara paling best untuk kumpul value.", "Target asal cuma nak tengok-tengok {item}, tapi deal harga {price} memang susah nak tolak. S-Coin cashback {percent} yang bernilai {netValue} buat pembelian ni rasa lebih untung. Untuk saya, memang memberi semangat untuk kumpul S-Coin lagi.", "Beli {item} untuk rumah, harga {price}. S-Coin cashback {percent} dengan nilai {netValue} buat saya rasa pembelian ni ada extra benefit. Serius rasa puas. Rasa puas hati sebab bukan sekadar beli, tapi ada value balik.", "Selesai urusan beli {item} pada harga {price}. Cashback S-Coin {percent} yang bernilai {netValue} memang nampak jelas value dia. Memang satu bonus. Satu pengalaman shopping yang kemas dan memuaskan.", "Akhirnya dapat juga beli {item} yang saya cari, harga {price}. S-Coin cashback {percent} bernilai {netValue} bagi rasa puas sebab ada reward untuk kemudian. Nanti boleh simpan untuk tebus barang lain pula.", "Pilihan paling berbaloi hari ni: {item} dengan harga {price}. Bila dikira balik, cashback S-Coin {percent} dengan nilai {netValue} memang sangat membantu. Bagus untuk orang yang selalu beli barang elektrik.", "Datang dengan bajet sendiri, jumpa {item} harga {price} terus rasa ngam. Bukan sekadar beli barang, siap dapat S-Coin cashback {percent} bernilai {netValue}. Memang puas hati dari mula sampai selesai.", "Pengalaman beli {item} hari ni memang lancar, harga {price}. Penerangan tentang S-Coin cashback {percent} bernilai {netValue} buat saya terus nampak manfaatnya. Untuk saya, rasa macam kecil-kecil reward, lama-lama boleh jadi besar.", "Saya ambil {item} sebab harga {price} rasa berbaloi dengan keperluan. Tambah pula dapat kumpul S-Coin cashback {percent} dengan nilai {netValue}. Serius rasa puas. Mudah faham, mudah guna, dan memang terasa manfaat dia.", "Urusan beli {item} harga {price} jadi lebih menarik dari yang saya sangka. Dapat kumpul S-Coin cashback {percent} nilai {netValue} memang bagi rasa puas hati. Memang satu bonus. Bagi saya, ini antara cara paling best untuk kumpul value.", "Dah lama plan nak beli {item}, akhirnya jumpa harga {price}. Extra S-Coin cashback {percent} bernilai {netValue} tu buat saya rasa lebih dihargai sebagai customer. Memang memberi semangat untuk kumpul S-Coin lagi.", "Beli {item} untuk kegunaan keluarga dengan harga {price}. Nilai S-Coin cashback {percent} iaitu {netValue} memang buat saya senyum. Rasa puas hati sebab bukan sekadar beli, tapi ada value balik.", "Mula-mula ragu-ragu, tapi bila tengok {item} harga {price}, terus jadi yakin. Paling saya suka, S-Coin cashback {percent} tu bersamaan {netValue}. Satu pengalaman shopping yang kemas dan memuaskan.", "Hari ni memang kena masa, {item} yang dicari ada dengan harga {price}. Cashback S-Coin {percent} bersamaan {netValue} jadi sebab utama deal ni rasa padu. Untuk saya, nanti boleh simpan untuk tebus barang lain pula.", "Tak sangka pembelian {item} harga {price} boleh jadi sepuas hati ni. Dengan pulangan S-Coin {percent} sebanyak {netValue}, rasa macam langkah bijak untuk kumpul reward. Serius rasa puas. Bagus untuk orang yang selalu beli barang elektrik.", "Satu keputusan yang rasa betul hari ni: beli {item} pada harga {price}. Bonus paling menarik ialah S-Coin cashback {percent}, nilai bersih {netValue}. Memang satu bonus. Memang puas hati dari mula sampai selesai.", "Bawa balik {item} dengan harga {price}, rasa macam pembelian yang sangat kemas. Reward S-Coin {percent} yang dapat {netValue} tu memang jadi highlight pembelian ni. Sangat sesuai untuk customer yang suka kira nilai sebenar pembelian.", "Untuk barang penting macam {item}, harga {price} ni memang rasa munasabah. Saya memang suka konsep beli barang sambil dapat S-Coin cashback {percent} bernilai {netValue}. Mudah faham, mudah guna, dan memang terasa manfaat dia.", "Saya pilih {item} hari ni, harga {price}, sebab memang nampak value dia. Bila tahu dapat S-Coin cashback {percent} nilai {netValue}, terus rasa pembelian ni lebih lengkap. Bagi saya, ini antara cara paling best untuk kumpul value.", "Tak perlu fikir lama bila {item} yang saya mahu ada pada harga {price}. Dengan S-Coin cashback {percent} worth {netValue}, rasa macam ada extra reward untuk next purchase. Untuk saya, memang memberi semangat untuk kumpul S-Coin lagi.", "Dari awal memang cari {item}, dan harga {price} buat saya terus setuju. Nilai pulangan S-Coin {percent} sebanyak {netValue} tu memang menarik perhatian. Serius rasa puas. Rasa puas hati sebab bukan sekadar beli, tapi ada value balik.", "Beli {item} harga {price} hari ni terasa macam shopping yang bijak. S-Coin cashback {percent} bernilai {netValue} buat pengalaman shopping ni lebih memorable. Memang satu bonus. Satu pengalaman shopping yang kemas dan memuaskan.", "Baru selesai beli {item} dengan harga {price}. Bonus paling menarik ialah S-Coin cashback {percent}, nilai bersih {netValue}. Nanti boleh simpan untuk tebus barang lain pula.", "Hari ni angkat {item} pada harga {price}. Reward S-Coin {percent} yang dapat {netValue} tu memang jadi highlight pembelian ni. Bagus untuk orang yang selalu beli barang elektrik.", "Datang survey {item}, akhirnya terus beli sebab harga {price} memang kena. Saya memang suka konsep beli barang sambil dapat S-Coin cashback {percent} bernilai {netValue}. Memang puas hati dari mula sampai selesai.", "Memang puas hati dapat bawa balik {item} dengan harga {price}. Bila tahu dapat S-Coin cashback {percent} nilai {netValue}, terus rasa pembelian ni lebih lengkap. Untuk saya, sangat sesuai untuk customer yang suka kira nilai sebenar pembelian.", "Target asal cuma nak tengok-tengok {item}, tapi deal harga {price} memang susah nak tolak. Dengan S-Coin cashback {percent} worth {netValue}, rasa macam ada extra reward untuk next purchase. Serius rasa puas. Benda kecil macam ni yang buat customer rasa dihargai.", "Beli {item} untuk rumah, harga {price}. Nilai pulangan S-Coin {percent} sebanyak {netValue} tu memang menarik perhatian. Memang satu bonus. Bagi saya, ini antara cara paling best untuk kumpul value.", "Selesai urusan beli {item} pada harga {price}. S-Coin cashback {percent} bernilai {netValue} buat pengalaman shopping ni lebih memorable. Memang memberi semangat untuk kumpul S-Coin lagi.", "Akhirnya dapat juga beli {item} yang saya cari, harga {price}. Lagi best bila dapat S-Coin cashback {percent} bernilai {netValue}. Rasa puas hati sebab bukan sekadar beli, tapi ada value balik.", "Pilihan paling berbaloi hari ni: {item} dengan harga {price}. S-Coin cashback {percent} bernilai {netValue} buat harga tu terasa lebih berbaloi. Satu pengalaman shopping yang kemas dan memuaskan.", "Datang dengan bajet sendiri, jumpa {item} harga {price} terus rasa ngam. S-Coin cashback {percent} nilai {netValue} buat rasa macam duit belanja ada pulangan semula. Untuk saya, nanti boleh simpan untuk tebus barang lain pula.", "Pengalaman beli {item} hari ni memang lancar, harga {price}. S-Coin cashback {percent} yang jadi {netValue} tu memang bonus yang susah nak abaikan. Serius rasa puas. Bagus untuk orang yang selalu beli barang elektrik.", "Saya ambil {item} sebab harga {price} rasa berbaloi dengan keperluan. S-Coin cashback {percent} yang bernilai {netValue} buat pembelian ni rasa lebih untung. Memang satu bonus. Memang puas hati dari mula sampai selesai.", "Urusan beli {item} harga {price} jadi lebih menarik dari yang saya sangka. S-Coin cashback {percent} dengan nilai {netValue} buat saya rasa pembelian ni ada extra benefit. Sangat sesuai untuk customer yang suka kira nilai sebenar pembelian.", "Dah lama plan nak beli {item}, akhirnya jumpa harga {price}. Cashback S-Coin {percent} yang bernilai {netValue} memang nampak jelas value dia. Benda kecil macam ni yang buat customer rasa dihargai.", "Beli {item} untuk kegunaan keluarga dengan harga {price}. S-Coin cashback {percent} bernilai {netValue} bagi rasa puas sebab ada reward untuk kemudian. Keluar kedai pun rasa ringan hati sebab tahu ada reward menunggu.", "Mula-mula ragu-ragu, tapi bila tengok {item} harga {price}, terus jadi yakin. Bila dikira balik, cashback S-Coin {percent} dengan nilai {netValue} memang sangat membantu. Untuk saya, memang memberi semangat untuk kumpul S-Coin lagi.", "Hari ni memang kena masa, {item} yang dicari ada dengan harga {price}. Bukan sekadar beli barang, siap dapat S-Coin cashback {percent} bernilai {netValue}. Serius rasa puas. Rasa puas hati sebab bukan sekadar beli, tapi ada value balik.", "Tak sangka pembelian {item} harga {price} boleh jadi sepuas hati ni. Penerangan tentang S-Coin cashback {percent} bernilai {netValue} buat saya terus nampak manfaatnya. Memang satu bonus. Satu pengalaman shopping yang kemas dan memuaskan.", "Satu keputusan yang rasa betul hari ni: beli {item} pada harga {price}. Tambah pula dapat kumpul S-Coin cashback {percent} dengan nilai {netValue}. Nanti boleh simpan untuk tebus barang lain pula.", "Bawa balik {item} dengan harga {price}, rasa macam pembelian yang sangat kemas. Dapat kumpul S-Coin cashback {percent} nilai {netValue} memang bagi rasa puas hati. Bagus untuk orang yang selalu beli barang elektrik.", "Untuk barang penting macam {item}, harga {price} ni memang rasa munasabah. Extra S-Coin cashback {percent} bernilai {netValue} tu buat saya rasa lebih dihargai sebagai customer. Memang puas hati dari mula sampai selesai.", "Saya pilih {item} hari ni, harga {price}, sebab memang nampak value dia. Nilai S-Coin cashback {percent} iaitu {netValue} memang buat saya senyum. Untuk saya, sangat sesuai untuk customer yang suka kira nilai sebenar pembelian.", "Tak perlu fikir lama bila {item} yang saya mahu ada pada harga {price}. Paling saya suka, S-Coin cashback {percent} tu bersamaan {netValue}. Serius rasa puas. Benda kecil macam ni yang buat customer rasa dihargai.", "Dari awal memang cari {item}, dan harga {price} buat saya terus setuju. Cashback S-Coin {percent} bersamaan {netValue} jadi sebab utama deal ni rasa padu. Memang satu bonus. Keluar kedai pun rasa ringan hati sebab tahu ada reward menunggu.", "Beli {item} harga {price} hari ni terasa macam shopping yang bijak. Dengan pulangan S-Coin {percent} sebanyak {netValue}, rasa macam langkah bijak untuk kumpul reward. Cashback macam ni memang buat pembelian terasa lebih smart.", "Baru selesai beli {item} dengan harga {price}. Tambah pula dapat kumpul S-Coin cashback {percent} dengan nilai {netValue}. Rasa puas hati sebab bukan sekadar beli, tapi ada value balik.", "Hari ni angkat {item} pada harga {price}. Dapat kumpul S-Coin cashback {percent} nilai {netValue} memang bagi rasa puas hati. Satu pengalaman shopping yang kemas dan memuaskan.", "Datang survey {item}, akhirnya terus beli sebab harga {price} memang kena. Extra S-Coin cashback {percent} bernilai {netValue} tu buat saya rasa lebih dihargai sebagai customer. Untuk saya, nanti boleh simpan untuk tebus barang lain pula.", "Memang puas hati dapat bawa balik {item} dengan harga {price}. Nilai S-Coin cashback {percent} iaitu {netValue} memang buat saya senyum. Serius rasa puas. Bagus untuk orang yang selalu beli barang elektrik.", "Target asal cuma nak tengok-tengok {item}, tapi deal harga {price} memang susah nak tolak. Paling saya suka, S-Coin cashback {percent} tu bersamaan {netValue}. Memang satu bonus. Memang puas hati dari mula sampai selesai.", "Beli {item} untuk rumah, harga {price}. Cashback S-Coin {percent} bersamaan {netValue} jadi sebab utama deal ni rasa padu. Sangat sesuai untuk customer yang suka kira nilai sebenar pembelian.", "Selesai urusan beli {item} pada harga {price}. Dengan pulangan S-Coin {percent} sebanyak {netValue}, rasa macam langkah bijak untuk kumpul reward. Benda kecil macam ni yang buat customer rasa dihargai.", "Akhirnya dapat juga beli {item} yang saya cari, harga {price}. Bonus paling menarik ialah S-Coin cashback {percent}, nilai bersih {netValue}. Keluar kedai pun rasa ringan hati sebab tahu ada reward menunggu.", "Pilihan paling berbaloi hari ni: {item} dengan harga {price}. Reward S-Coin {percent} yang dapat {netValue} tu memang jadi highlight pembelian ni. Untuk saya, cashback macam ni memang buat pembelian terasa lebih smart.", "Datang dengan bajet sendiri, jumpa {item} harga {price} terus rasa ngam. Saya memang suka konsep beli barang sambil dapat S-Coin cashback {percent} bernilai {netValue}. Serius rasa puas. Staf terangkan dengan jelas, jadi senang faham apa benefit yang dapat.", "Pengalaman beli {item} hari ni memang lancar, harga {price}. Bila tahu dapat S-Coin cashback {percent} nilai {netValue}, terus rasa pembelian ni lebih lengkap. Memang satu bonus. Satu pengalaman shopping yang kemas dan memuaskan.", "Saya ambil {item} sebab harga {price} rasa berbaloi dengan keperluan. Dengan S-Coin cashback {percent} worth {netValue}, rasa macam ada extra reward untuk next purchase. Nanti boleh simpan untuk tebus barang lain pula.", "Urusan beli {item} harga {price} jadi lebih menarik dari yang saya sangka. Nilai pulangan S-Coin {percent} sebanyak {netValue} tu memang menarik perhatian. Bagus untuk orang yang selalu beli barang elektrik.", "Dah lama plan nak beli {item}, akhirnya jumpa harga {price}. S-Coin cashback {percent} bernilai {netValue} buat pengalaman shopping ni lebih memorable. Memang puas hati dari mula sampai selesai.", "Beli {item} untuk kegunaan keluarga dengan harga {price}. Lagi best bila dapat S-Coin cashback {percent} bernilai {netValue}. Untuk saya, sangat sesuai untuk customer yang suka kira nilai sebenar pembelian.", "Mula-mula ragu-ragu, tapi bila tengok {item} harga {price}, terus jadi yakin. S-Coin cashback {percent} bernilai {netValue} buat harga tu terasa lebih berbaloi. Serius rasa puas. Benda kecil macam ni yang buat customer rasa dihargai.", "Hari ni memang kena masa, {item} yang dicari ada dengan harga {price}. S-Coin cashback {percent} nilai {netValue} buat rasa macam duit belanja ada pulangan semula. Memang satu bonus. Keluar kedai pun rasa ringan hati sebab tahu ada reward menunggu.", "Tak sangka pembelian {item} harga {price} boleh jadi sepuas hati ni. S-Coin cashback {percent} yang jadi {netValue} tu memang bonus yang susah nak abaikan. Cashback macam ni memang buat pembelian terasa lebih smart.", "Satu keputusan yang rasa betul hari ni: beli {item} pada harga {price}. S-Coin cashback {percent} yang bernilai {netValue} buat pembelian ni rasa lebih untung. Staf terangkan dengan jelas, jadi senang faham apa benefit yang dapat.", "Bawa balik {item} dengan harga {price}, rasa macam pembelian yang sangat kemas. S-Coin cashback {percent} dengan nilai {netValue} buat saya rasa pembelian ni ada extra benefit. Tak rasa rugi sebab ada pulangan untuk kegunaan akan datang.", "Untuk barang penting macam {item}, harga {price} ni memang rasa munasabah. Cashback S-Coin {percent} yang bernilai {netValue} memang nampak jelas value dia. Untuk saya, nanti boleh simpan untuk tebus barang lain pula.", "Saya pilih {item} hari ni, harga {price}, sebab memang nampak value dia. S-Coin cashback {percent} bernilai {netValue} bagi rasa puas sebab ada reward untuk kemudian. Serius rasa puas. Bagus untuk orang yang selalu beli barang elektrik.", "Tak perlu fikir lama bila {item} yang saya mahu ada pada harga {price}. Bila dikira balik, cashback S-Coin {percent} dengan nilai {netValue} memang sangat membantu. Memang satu bonus. Memang puas hati dari mula sampai selesai.", "Dari awal memang cari {item}, dan harga {price} buat saya terus setuju. Bukan sekadar beli barang, siap dapat S-Coin cashback {percent} bernilai {netValue}. Sangat sesuai untuk customer yang suka kira nilai sebenar pembelian.", "Beli {item} harga {price} hari ni terasa macam shopping yang bijak. Penerangan tentang S-Coin cashback {percent} bernilai {netValue} buat saya terus nampak manfaatnya. Benda kecil macam ni yang buat customer rasa dihargai.", "Baru selesai beli {item} dengan harga {price}. S-Coin cashback {percent} yang bernilai {netValue} buat pembelian ni rasa lebih untung. Keluar kedai pun rasa ringan hati sebab tahu ada reward menunggu.", "Hari ni angkat {item} pada harga {price}. S-Coin cashback {percent} dengan nilai {netValue} buat saya rasa pembelian ni ada extra benefit. Untuk saya, cashback macam ni memang buat pembelian terasa lebih smart.", "Datang survey {item}, akhirnya terus beli sebab harga {price} memang kena. Cashback S-Coin {percent} yang bernilai {netValue} memang nampak jelas value dia. Serius rasa puas. Staf terangkan dengan jelas, jadi senang faham apa benefit yang dapat.", "Memang puas hati dapat bawa balik {item} dengan harga {price}. S-Coin cashback {percent} bernilai {netValue} bagi rasa puas sebab ada reward untuk kemudian. Memang satu bonus. Tak rasa rugi sebab ada pulangan untuk kegunaan akan datang.", "Target asal cuma nak tengok-tengok {item}, tapi deal harga {price} memang susah nak tolak. Bila dikira balik, cashback S-Coin {percent} dengan nilai {netValue} memang sangat membantu. Simple, jelas, dan rasa macam customer betul-betul dapat manfaat.", "Beli {item} untuk rumah, harga {price}. Bukan sekadar beli barang, siap dapat S-Coin cashback {percent} bernilai {netValue}. Bagus untuk orang yang selalu beli barang elektrik.", "Selesai urusan beli {item} pada harga {price}. Penerangan tentang S-Coin cashback {percent} bernilai {netValue} buat saya terus nampak manfaatnya. Memang puas hati dari mula sampai selesai.", "Akhirnya dapat juga beli {item} yang saya cari, harga {price}. Tambah pula dapat kumpul S-Coin cashback {percent} dengan nilai {netValue}. Untuk saya, sangat sesuai untuk customer yang suka kira nilai sebenar pembelian.", "Pilihan paling berbaloi hari ni: {item} dengan harga {price}. Dapat kumpul S-Coin cashback {percent} nilai {netValue} memang bagi rasa puas hati. Serius rasa puas. Benda kecil macam ni yang buat customer rasa dihargai.", "Datang dengan bajet sendiri, jumpa {item} harga {price} terus rasa ngam. Extra S-Coin cashback {percent} bernilai {netValue} tu buat saya rasa lebih dihargai sebagai customer. Memang satu bonus. Keluar kedai pun rasa ringan hati sebab tahu ada reward menunggu.", "Pengalaman beli {item} hari ni memang lancar, harga {price}. Nilai S-Coin cashback {percent} iaitu {netValue} memang buat saya senyum. Cashback macam ni memang buat pembelian terasa lebih smart.", "Saya ambil {item} sebab harga {price} rasa berbaloi dengan keperluan. Paling saya suka, S-Coin cashback {percent} tu bersamaan {netValue}. Staf terangkan dengan jelas, jadi senang faham apa benefit yang dapat.", "Urusan beli {item} harga {price} jadi lebih menarik dari yang saya sangka. Cashback S-Coin {percent} bersamaan {netValue} jadi sebab utama deal ni rasa padu. Tak rasa rugi sebab ada pulangan untuk kegunaan akan datang.", "Dah lama plan nak beli {item}, akhirnya jumpa harga {price}. Dengan pulangan S-Coin {percent} sebanyak {netValue}, rasa macam langkah bijak untuk kumpul reward. Untuk saya, simple, jelas, dan rasa macam customer betul-betul dapat manfaat.", "Beli {item} untuk kegunaan keluarga dengan harga {price}. Bonus paling menarik ialah S-Coin cashback {percent}, nilai bersih {netValue}. Serius rasa puas. Lepas ni memang akan lebih rajin check S-Coin.", "Mula-mula ragu-ragu, tapi bila tengok {item} harga {price}, terus jadi yakin. Reward S-Coin {percent} yang dapat {netValue} tu memang jadi highlight pembelian ni. Memang satu bonus. Memang puas hati dari mula sampai selesai.", "Hari ni memang kena masa, {item} yang dicari ada dengan harga {price}. Saya memang suka konsep beli barang sambil dapat S-Coin cashback {percent} bernilai {netValue}. Sangat sesuai untuk customer yang suka kira nilai sebenar pembelian.", "Tak sangka pembelian {item} harga {price} boleh jadi sepuas hati ni. Bila tahu dapat S-Coin cashback {percent} nilai {netValue}, terus rasa pembelian ni lebih lengkap. Benda kecil macam ni yang buat customer rasa dihargai.", "Satu keputusan yang rasa betul hari ni: beli {item} pada harga {price}. Dengan S-Coin cashback {percent} worth {netValue}, rasa macam ada extra reward untuk next purchase. Keluar kedai pun rasa ringan hati sebab tahu ada reward menunggu.", "Bawa balik {item} dengan harga {price}, rasa macam pembelian yang sangat kemas. Nilai pulangan S-Coin {percent} sebanyak {netValue} tu memang menarik perhatian. Untuk saya, cashback macam ni memang buat pembelian terasa lebih smart.", "Untuk barang penting macam {item}, harga {price} ni memang rasa munasabah. S-Coin cashback {percent} bernilai {netValue} buat pengalaman shopping ni lebih memorable. Serius rasa puas. Staf terangkan dengan jelas, jadi senang faham apa benefit yang dapat.", "Saya pilih {item} hari ni, harga {price}, sebab memang nampak value dia. Lagi best bila dapat S-Coin cashback {percent} bernilai {netValue}. Memang satu bonus. Tak rasa rugi sebab ada pulangan untuk kegunaan akan datang.", "Tak perlu fikir lama bila {item} yang saya mahu ada pada harga {price}. S-Coin cashback {percent} bernilai {netValue} buat harga tu terasa lebih berbaloi. Simple, jelas, dan rasa macam customer betul-betul dapat manfaat.", "Dari awal memang cari {item}, dan harga {price} buat saya terus setuju. S-Coin cashback {percent} nilai {netValue} buat rasa macam duit belanja ada pulangan semula. Lepas ni memang akan lebih rajin check S-Coin.", "Beli {item} harga {price} hari ni terasa macam shopping yang bijak. S-Coin cashback {percent} yang jadi {netValue} tu memang bonus yang susah nak abaikan. Saya suka bila reward system dia jelas dan praktikal.", "Baru selesai beli {item} dengan harga {price}. Dengan S-Coin cashback {percent} worth {netValue}, rasa macam ada extra reward untuk next purchase. Untuk saya, sangat sesuai untuk customer yang suka kira nilai sebenar pembelian.", "Hari ni angkat {item} pada harga {price}. Nilai pulangan S-Coin {percent} sebanyak {netValue} tu memang menarik perhatian. Serius rasa puas. Benda kecil macam ni yang buat customer rasa dihargai.", "Datang survey {item}, akhirnya terus beli sebab harga {price} memang kena. S-Coin cashback {percent} bernilai {netValue} buat pengalaman shopping ni lebih memorable. Memang satu bonus. Keluar kedai pun rasa ringan hati sebab tahu ada reward menunggu.", "Memang puas hati dapat bawa balik {item} dengan harga {price}. Lagi best bila dapat S-Coin cashback {percent} bernilai {netValue}. Cashback macam ni memang buat pembelian terasa lebih smart.", "Target asal cuma nak tengok-tengok {item}, tapi deal harga {price} memang susah nak tolak. S-Coin cashback {percent} bernilai {netValue} buat harga tu terasa lebih berbaloi. Staf terangkan dengan jelas, jadi senang faham apa benefit yang dapat.", "Beli {item} untuk rumah, harga {price}. S-Coin cashback {percent} nilai {netValue} buat rasa macam duit belanja ada pulangan semula. Tak rasa rugi sebab ada pulangan untuk kegunaan akan datang.", "Selesai urusan beli {item} pada harga {price}. S-Coin cashback {percent} yang jadi {netValue} tu memang bonus yang susah nak abaikan. Untuk saya, simple, jelas, dan rasa macam customer betul-betul dapat manfaat.", "Akhirnya dapat juga beli {item} yang saya cari, harga {price}. S-Coin cashback {percent} yang bernilai {netValue} buat pembelian ni rasa lebih untung. Serius rasa puas. Lepas ni memang akan lebih rajin check S-Coin.", "Pilihan paling berbaloi hari ni: {item} dengan harga {price}. S-Coin cashback {percent} dengan nilai {netValue} buat saya rasa pembelian ni ada extra benefit. Memang satu bonus. Saya suka bila reward system dia jelas dan praktikal.", "Datang dengan bajet sendiri, jumpa {item} harga {price} terus rasa ngam. Cashback S-Coin {percent} yang bernilai {netValue} memang nampak jelas value dia. Memang pengalaman yang positif dan senang diingat.", "Pengalaman beli {item} hari ni memang lancar, harga {price}. S-Coin cashback {percent} bernilai {netValue} bagi rasa puas sebab ada reward untuk kemudian. Benda kecil macam ni yang buat customer rasa dihargai.", "Saya ambil {item} sebab harga {price} rasa berbaloi dengan keperluan. Bila dikira balik, cashback S-Coin {percent} dengan nilai {netValue} memang sangat membantu. Keluar kedai pun rasa ringan hati sebab tahu ada reward menunggu.", "Urusan beli {item} harga {price} jadi lebih menarik dari yang saya sangka. Bukan sekadar beli barang, siap dapat S-Coin cashback {percent} bernilai {netValue}. Untuk saya, cashback macam ni memang buat pembelian terasa lebih smart.", "Dah lama plan nak beli {item}, akhirnya jumpa harga {price}. Penerangan tentang S-Coin cashback {percent} bernilai {netValue} buat saya terus nampak manfaatnya. Serius rasa puas. Staf terangkan dengan jelas, jadi senang faham apa benefit yang dapat.", "Beli {item} untuk kegunaan keluarga dengan harga {price}. Tambah pula dapat kumpul S-Coin cashback {percent} dengan nilai {netValue}. Memang satu bonus. Tak rasa rugi sebab ada pulangan untuk kegunaan akan datang.", "Mula-mula ragu-ragu, tapi bila tengok {item} harga {price}, terus jadi yakin. Dapat kumpul S-Coin cashback {percent} nilai {netValue} memang bagi rasa puas hati. Simple, jelas, dan rasa macam customer betul-betul dapat manfaat.", "Hari ni memang kena masa, {item} yang dicari ada dengan harga {price}. Extra S-Coin cashback {percent} bernilai {netValue} tu buat saya rasa lebih dihargai sebagai customer. Lepas ni memang akan lebih rajin check S-Coin.", "Tak sangka pembelian {item} harga {price} boleh jadi sepuas hati ni. Nilai S-Coin cashback {percent} iaitu {netValue} memang buat saya senyum. Saya suka bila reward system dia jelas dan praktikal.", "Satu keputusan yang rasa betul hari ni: beli {item} pada harga {price}. Paling saya suka, S-Coin cashback {percent} tu bersamaan {netValue}. Untuk saya, memang pengalaman yang positif dan senang diingat.", "Bawa balik {item} dengan harga {price}, rasa macam pembelian yang sangat kemas. Cashback S-Coin {percent} bersamaan {netValue} jadi sebab utama deal ni rasa padu. Serius rasa puas. Rasa macam dapat bonus walaupun barang memang perlu dibeli.", "Untuk barang penting macam {item}, harga {price} ni memang rasa munasabah. Dengan pulangan S-Coin {percent} sebanyak {netValue}, rasa macam langkah bijak untuk kumpul reward. Memang satu bonus. Keluar kedai pun rasa ringan hati sebab tahu ada reward menunggu.", "Saya pilih {item} hari ni, harga {price}, sebab memang nampak value dia. Bonus paling menarik ialah S-Coin cashback {percent}, nilai bersih {netValue}. Cashback macam ni memang buat pembelian terasa lebih smart.", "Tak perlu fikir lama bila {item} yang saya mahu ada pada harga {price}. Reward S-Coin {percent} yang dapat {netValue} tu memang jadi highlight pembelian ni. Staf terangkan dengan jelas, jadi senang faham apa benefit yang dapat.", "Dari awal memang cari {item}, dan harga {price} buat saya terus setuju. Saya memang suka konsep beli barang sambil dapat S-Coin cashback {percent} bernilai {netValue}. Tak rasa rugi sebab ada pulangan untuk kegunaan akan datang.", "Beli {item} harga {price} hari ni terasa macam shopping yang bijak. Bila tahu dapat S-Coin cashback {percent} nilai {netValue}, terus rasa pembelian ni lebih lengkap. Untuk saya, simple, jelas, dan rasa macam customer betul-betul dapat manfaat.", "Baru selesai beli {item} dengan harga {price}. Paling saya suka, S-Coin cashback {percent} tu bersamaan {netValue}. Serius rasa puas. Lepas ni memang akan lebih rajin check S-Coin.", "Hari ni angkat {item} pada harga {price}. Cashback S-Coin {percent} bersamaan {netValue} jadi sebab utama deal ni rasa padu. Memang satu bonus. Saya suka bila reward system dia jelas dan praktikal.", "Datang survey {item}, akhirnya terus beli sebab harga {price} memang kena. Dengan pulangan S-Coin {percent} sebanyak {netValue}, rasa macam langkah bijak untuk kumpul reward. Memang pengalaman yang positif dan senang diingat.", "Memang puas hati dapat bawa balik {item} dengan harga {price}. Bonus paling menarik ialah S-Coin cashback {percent}, nilai bersih {netValue}. Rasa macam dapat bonus walaupun barang memang perlu dibeli.", "Target asal cuma nak tengok-tengok {item}, tapi deal harga {price} memang susah nak tolak. Reward S-Coin {percent} yang dapat {netValue} tu memang jadi highlight pembelian ni. Ini baru rasa shopping yang bijak.", "Beli {item} untuk rumah, harga {price}. Saya memang suka konsep beli barang sambil dapat S-Coin cashback {percent} bernilai {netValue}. Untuk saya, cashback macam ni memang buat pembelian terasa lebih smart.", "Selesai urusan beli {item} pada harga {price}. Bila tahu dapat S-Coin cashback {percent} nilai {netValue}, terus rasa pembelian ni lebih lengkap. Serius rasa puas. Staf terangkan dengan jelas, jadi senang faham apa benefit yang dapat.", "Akhirnya dapat juga beli {item} yang saya cari, harga {price}. Dengan S-Coin cashback {percent} worth {netValue}, rasa macam ada extra reward untuk next purchase. Memang satu bonus. Tak rasa rugi sebab ada pulangan untuk kegunaan akan datang.", "Pilihan paling berbaloi hari ni: {item} dengan harga {price}. Nilai pulangan S-Coin {percent} sebanyak {netValue} tu memang menarik perhatian. Simple, jelas, dan rasa macam customer betul-betul dapat manfaat.", "Datang dengan bajet sendiri, jumpa {item} harga {price} terus rasa ngam. S-Coin cashback {percent} bernilai {netValue} buat pengalaman shopping ni lebih memorable. Lepas ni memang akan lebih rajin check S-Coin.", "Pengalaman beli {item} hari ni memang lancar, harga {price}. Lagi best bila dapat S-Coin cashback {percent} bernilai {netValue}. Saya suka bila reward system dia jelas dan praktikal.", "Saya ambil {item} sebab harga {price} rasa berbaloi dengan keperluan. S-Coin cashback {percent} bernilai {netValue} buat harga tu terasa lebih berbaloi. Untuk saya, memang pengalaman yang positif dan senang diingat.", "Urusan beli {item} harga {price} jadi lebih menarik dari yang saya sangka. S-Coin cashback {percent} nilai {netValue} buat rasa macam duit belanja ada pulangan semula. Serius rasa puas. Rasa macam dapat bonus walaupun barang memang perlu dibeli.", "Dah lama plan nak beli {item}, akhirnya jumpa harga {price}. S-Coin cashback {percent} yang jadi {netValue} tu memang bonus yang susah nak abaikan. Memang satu bonus. Ini baru rasa shopping yang bijak.", "Beli {item} untuk kegunaan keluarga dengan harga {price}. S-Coin cashback {percent} yang bernilai {netValue} buat pembelian ni rasa lebih untung. Saya suka sebab benefit dia nampak terus bila staf explain.", "Mula-mula ragu-ragu, tapi bila tengok {item} harga {price}, terus jadi yakin. S-Coin cashback {percent} dengan nilai {netValue} buat saya rasa pembelian ni ada extra benefit. Staf terangkan dengan jelas, jadi senang faham apa benefit yang dapat.", "Hari ni memang kena masa, {item} yang dicari ada dengan harga {price}. Cashback S-Coin {percent} yang bernilai {netValue} memang nampak jelas value dia. Tak rasa rugi sebab ada pulangan untuk kegunaan akan datang.", "Tak sangka pembelian {item} harga {price} boleh jadi sepuas hati ni. S-Coin cashback {percent} bernilai {netValue} bagi rasa puas sebab ada reward untuk kemudian. Untuk saya, simple, jelas, dan rasa macam customer betul-betul dapat manfaat.", "Satu keputusan yang rasa betul hari ni: beli {item} pada harga {price}. Bila dikira balik, cashback S-Coin {percent} dengan nilai {netValue} memang sangat membantu. Serius rasa puas. Lepas ni memang akan lebih rajin check S-Coin.", "Bawa balik {item} dengan harga {price}, rasa macam pembelian yang sangat kemas. Bukan sekadar beli barang, siap dapat S-Coin cashback {percent} bernilai {netValue}. Memang satu bonus. Saya suka bila reward system dia jelas dan praktikal.", "Untuk barang penting macam {item}, harga {price} ni memang rasa munasabah. Penerangan tentang S-Coin cashback {percent} bernilai {netValue} buat saya terus nampak manfaatnya. Memang pengalaman yang positif dan senang diingat.", "Saya pilih {item} hari ni, harga {price}, sebab memang nampak value dia. Tambah pula dapat kumpul S-Coin cashback {percent} dengan nilai {netValue}. Rasa macam dapat bonus walaupun barang memang perlu dibeli.", "Tak perlu fikir lama bila {item} yang saya mahu ada pada harga {price}. Dapat kumpul S-Coin cashback {percent} nilai {netValue} memang bagi rasa puas hati. Ini baru rasa shopping yang bijak.", "Dari awal memang cari {item}, dan harga {price} buat saya terus setuju. Extra S-Coin cashback {percent} bernilai {netValue} tu buat saya rasa lebih dihargai sebagai customer. Untuk saya, saya suka sebab benefit dia nampak terus bila staf explain.", "Beli {item} harga {price} hari ni terasa macam shopping yang bijak. Nilai S-Coin cashback {percent} iaitu {netValue} memang buat saya senyum. Serius rasa puas. Deal macam ni memang buat orang rasa nak repeat beli."], "redeem": ["Hari ni baru rasa betul-betul puas guna S-Coin untuk {item}. Guna {points} S-Coin dan dapat jimat {value}. Rasa macam duit yang dibelanja sebelum ni datang balik dalam bentuk reward.", "Tak sangka S-Coin yang terkumpul selama ni akhirnya berguna untuk {item}. Bila {points} S-Coin ditolak, terus nampak jimat {value}. Reward macam ni memang buat customer rasa dihargai.", "Datang nak tengok barang biasa-biasa, sekali boleh redeem {item}. Tolak {points} S-Coin untuk {item}, terus nampak value {value}. Terus rasa lega. Memang puas hati sebab reward dia bukan sekadar atas kertas.", "Akhirnya dapat tebus {item} yang memang dah lama saya aim. Tukar {points} S-Coin kepada value {value}, memang rasa puas. Untuk saya, keluar kedai pun rasa senyum sebab bajet selamat.", "Saya ingat S-Coin tu kecil-kecil saja, rupanya boleh bantu banyak untuk {item}. {points} S-Coin digunakan dan hasilnya jimat {value}. Serius berbaloi. Lepas ni memang lebih rajin kumpul S-Coin.", "Pengalaman redeem {item} hari ni memang buat saya ingat lama. Redeem guna {points} S-Coin dan dapat manfaat {value}. Memang terbaik. Satu pengalaman yang buat saya lebih percaya dengan program reward ni.", "Bila staf check, rupanya S-Coin saya cukup untuk {item}. {points} S-Coin yang dikumpul akhirnya bertukar jadi penjimatan {value}. Pengalaman macam ni buat saya rasa membership tu ada nilai sebenar.", "Ini kali pertama saya rasa reward membership memang terasa bila redeem {item}. {points} S-Coin digunakan dengan baik dan hasilnya jimat {value}. Memang berbaloi simpan dan tak biarkan S-Coin terbiar.", "Dah lama simpan S-Coin, hari ni baru nampak hasil dia untuk {item}. Tebus {item} guna {points} S-Coin, penjimatan {value}. Terus rasa lega. Seronok sebab penjimatan dia terus nampak masa checkout.", "Datang kedai dengan niat survey, keluar dengan {item} hasil redeem. {points} S-Coin tu nampak macam nombor saja, tapi bila redeem jadi {value}. Untuk saya, paling best, tak perlu pening sebab staf explain dengan jelas.", "Satu benda yang saya suka hari ni: S-Coin memang boleh guna betul-betul untuk {item}. Dengan {points} S-Coin, {item} jadi lebih mampu milik dan jimat {value}. Serius berbaloi. Benda kecil yang terkumpul lama-lama rupanya jadi besar.", "Saya hampir nak bayar biasa, tapi staf bantu check S-Coin dulu untuk {item}. Dengan {points} S-Coin, nilai redeem jadi {value}. Memang terbaik. Lepas ni kalau beli barang elektrik, memang akan ingat S-Coin dulu.", "Memang rasa berbaloi jadi member bila dapat redeem {item}. Nilai {points} S-Coin tu bersamaan {value}, memang terasa. Memang rasa macam dapat hadiah kecil tapi bermakna.", "Tak pernah sangka point yang terkumpul boleh jadi penjimatan sebenar untuk {item}. Selesai redeem {item} dengan {points} S-Coin dan jimat {value}. Penjimatan yang nampak kecil pada awalnya, tapi sangat terasa bila digunakan.", "Hari ni S-Coin jadi penyelamat bajet saya untuk {item}. Pakai {points} S-Coin untuk {item}, dapat saving {value}. Terus rasa lega. Saya suka sebab proses dia mudah dan staf bantu sampai faham.", "Mula-mula tak perasan baki S-Coin ada banyak, rupa-rupanya cukup untuk {item}. Jumlah {points} S-Coin tu terus cover nilai {value}. Untuk saya, memang sesuai untuk customer yang suka kumpul value untuk masa depan.", "Bila tengok {item} boleh ditebus, terus rasa bersemangat. Dengan baki {points} S-Coin, {item} jadi lebih ringan untuk dibayar, jimat {value}. Serius berbaloi. Rasa puas hati sebab dapat guna benefit yang memang ada.", "Redeem {item} hari ni memang rasa macam reward untuk diri sendiri. Redeem {item} pakai {points} S-Coin, nilai jimat {value} memang jelas. Memang terbaik. Saya suka bila point boleh jadi barang sebenar.", "S-Coin yang saya kumpul sikit-sikit akhirnya jadi sesuatu yang berguna untuk {item}. Tolak {points} S-Coin, terus terasa penjimatan {value}. Memang memorable sebab tak sangka boleh jimat sebanyak tu.", "Rasa puas bila boleh bawa balik {item} tanpa bayar penuh. Pakai {points} S-Coin saja, dapat kurang {value}. Ini pengalaman yang buat saya rasa nak repeat lagi.", "Saya selalu lupa nak check S-Coin, hari ni nasib baik staf ingatkan untuk {item}. Guna {points} S-Coin, rasa macam dapat pulangan sebenar sebanyak {value}. Terus rasa lega. S-Coin ni nampak simple, tapi bila redeem baru terasa power dia.", "Pengalaman paling best bila reward yang disimpan boleh terus digunakan untuk {item}. S-Coin {points} terus bantu kurangkan kos sebanyak {value}. Untuk saya, rasa macam duit yang dibelanja sebelum ni datang balik dalam bentuk reward.", "Tak sia-sia kumpul S-Coin setiap kali shopping, hari ni dapat redeem {item}. Saya redeem guna {points} S-Coin, dapat value {value}. Serius berbaloi. Reward macam ni memang buat customer rasa dihargai.", "Hari ni baru saya betul-betul faham kenapa S-Coin ni menarik untuk redeem {item}. S-Coin sebanyak {points} digunakan untuk dapatkan penjimatan {value}. Memang terbaik. Memang puas hati sebab reward dia bukan sekadar atas kertas.", "Dari tak kisah pasal S-Coin, terus jadi berminat lepas redeem {item}. Jumlah {points} S-Coin tu memang berbaloi sebab boleh jimat {value}. Keluar kedai pun rasa senyum sebab bajet selamat.", "Hari ni baru rasa betul-betul puas guna S-Coin untuk {item}. Tolak {points} S-Coin, terus terasa penjimatan {value}. Lepas ni memang lebih rajin kumpul S-Coin.", "Tak sangka S-Coin yang terkumpul selama ni akhirnya berguna untuk {item}. Pakai {points} S-Coin saja, dapat kurang {value}. Terus rasa lega. Satu pengalaman yang buat saya lebih percaya dengan program reward ni.", "Datang nak tengok barang biasa-biasa, sekali boleh redeem {item}. Guna {points} S-Coin, rasa macam dapat pulangan sebenar sebanyak {value}. Untuk saya, pengalaman macam ni buat saya rasa membership tu ada nilai sebenar.", "Akhirnya dapat tebus {item} yang memang dah lama saya aim. S-Coin {points} terus bantu kurangkan kos sebanyak {value}. Serius berbaloi. Memang berbaloi simpan dan tak biarkan S-Coin terbiar.", "Saya ingat S-Coin tu kecil-kecil saja, rupanya boleh bantu banyak untuk {item}. Saya redeem guna {points} S-Coin, dapat value {value}. Memang terbaik. Seronok sebab penjimatan dia terus nampak masa checkout.", "Pengalaman redeem {item} hari ni memang buat saya ingat lama. S-Coin sebanyak {points} digunakan untuk dapatkan penjimatan {value}. Rasa macam menang kecil-kecilan dalam shopping hari ni.", "Bila staf check, rupanya S-Coin saya cukup untuk {item}. Jumlah {points} S-Coin tu memang berbaloi sebab boleh jimat {value}. Benda kecil yang terkumpul lama-lama rupanya jadi besar.", "Ini kali pertama saya rasa reward membership memang terasa bila redeem {item}. Guna {points} S-Coin dan dapat jimat {value}. Terus rasa lega. Lepas ni kalau beli barang elektrik, memang akan ingat S-Coin dulu.", "Dah lama simpan S-Coin, hari ni baru nampak hasil dia untuk {item}. Bila {points} S-Coin ditolak, terus nampak jimat {value}. Untuk saya, memang rasa macam dapat hadiah kecil tapi bermakna.", "Datang kedai dengan niat survey, keluar dengan {item} hasil redeem. Tolak {points} S-Coin untuk {item}, terus nampak value {value}. Serius berbaloi. Penjimatan yang nampak kecil pada awalnya, tapi sangat terasa bila digunakan.", "Satu benda yang saya suka hari ni: S-Coin memang boleh guna betul-betul untuk {item}. Tukar {points} S-Coin kepada value {value}, memang rasa puas. Memang terbaik. Saya suka sebab proses dia mudah dan staf bantu sampai faham.", "Saya hampir nak bayar biasa, tapi staf bantu check S-Coin dulu untuk {item}. {points} S-Coin digunakan dan hasilnya jimat {value}. Memang sesuai untuk customer yang suka kumpul value untuk masa depan.", "Memang rasa berbaloi jadi member bila dapat redeem {item}. Redeem guna {points} S-Coin dan dapat manfaat {value}. Rasa puas hati sebab dapat guna benefit yang memang ada.", "Tak pernah sangka point yang terkumpul boleh jadi penjimatan sebenar untuk {item}. {points} S-Coin yang dikumpul akhirnya bertukar jadi penjimatan {value}. Terus rasa lega. Saya suka bila point boleh jadi barang sebenar.", "Hari ni S-Coin jadi penyelamat bajet saya untuk {item}. {points} S-Coin digunakan dengan baik dan hasilnya jimat {value}. Untuk saya, memang memorable sebab tak sangka boleh jimat sebanyak tu.", "Mula-mula tak perasan baki S-Coin ada banyak, rupa-rupanya cukup untuk {item}. Tebus {item} guna {points} S-Coin, penjimatan {value}. Serius berbaloi. S-Coin memang jadi extra value yang berbaloi untuk disimpan.", "Bila tengok {item} boleh ditebus, terus rasa bersemangat. {points} S-Coin tu nampak macam nombor saja, tapi bila redeem jadi {value}. Memang terbaik. S-Coin ni nampak simple, tapi bila redeem baru terasa power dia.", "Redeem {item} hari ni memang rasa macam reward untuk diri sendiri. Dengan {points} S-Coin, {item} jadi lebih mampu milik dan jimat {value}. Rasa macam duit yang dibelanja sebelum ni datang balik dalam bentuk reward.", "S-Coin yang saya kumpul sikit-sikit akhirnya jadi sesuatu yang berguna untuk {item}. Dengan {points} S-Coin, nilai redeem jadi {value}. Reward macam ni memang buat customer rasa dihargai.", "Rasa puas bila boleh bawa balik {item} tanpa bayar penuh. Nilai {points} S-Coin tu bersamaan {value}, memang terasa. Terus rasa lega. Memang puas hati sebab reward dia bukan sekadar atas kertas.", "Saya selalu lupa nak check S-Coin, hari ni nasib baik staf ingatkan untuk {item}. Selesai redeem {item} dengan {points} S-Coin dan jimat {value}. Untuk saya, keluar kedai pun rasa senyum sebab bajet selamat.", "Pengalaman paling best bila reward yang disimpan boleh terus digunakan untuk {item}. Pakai {points} S-Coin untuk {item}, dapat saving {value}. Serius berbaloi. Lepas ni memang lebih rajin kumpul S-Coin.", "Tak sia-sia kumpul S-Coin setiap kali shopping, hari ni dapat redeem {item}. Jumlah {points} S-Coin tu terus cover nilai {value}. Memang terbaik. Satu pengalaman yang buat saya lebih percaya dengan program reward ni.", "Hari ni baru saya betul-betul faham kenapa S-Coin ni menarik untuk redeem {item}. Dengan baki {points} S-Coin, {item} jadi lebih ringan untuk dibayar, jimat {value}. Pengalaman macam ni buat saya rasa membership tu ada nilai sebenar.", "Dari tak kisah pasal S-Coin, terus jadi berminat lepas redeem {item}. Redeem {item} pakai {points} S-Coin, nilai jimat {value} memang jelas. Memang berbaloi simpan dan tak biarkan S-Coin terbiar.", "Hari ni baru rasa betul-betul puas guna S-Coin untuk {item}. Dengan {points} S-Coin, nilai redeem jadi {value}. Terus rasa lega. Ini baru nama dia reward yang customer boleh rasa.", "Tak sangka S-Coin yang terkumpul selama ni akhirnya berguna untuk {item}. Nilai {points} S-Coin tu bersamaan {value}, memang terasa. Untuk saya, rasa macam menang kecil-kecilan dalam shopping hari ni.", "Datang nak tengok barang biasa-biasa, sekali boleh redeem {item}. Selesai redeem {item} dengan {points} S-Coin dan jimat {value}. Serius berbaloi. Benda kecil yang terkumpul lama-lama rupanya jadi besar.", "Akhirnya dapat tebus {item} yang memang dah lama saya aim. Pakai {points} S-Coin untuk {item}, dapat saving {value}. Memang terbaik. Lepas ni kalau beli barang elektrik, memang akan ingat S-Coin dulu.", "Saya ingat S-Coin tu kecil-kecil saja, rupanya boleh bantu banyak untuk {item}. Jumlah {points} S-Coin tu terus cover nilai {value}. Memang rasa macam dapat hadiah kecil tapi bermakna.", "Pengalaman redeem {item} hari ni memang buat saya ingat lama. Dengan baki {points} S-Coin, {item} jadi lebih ringan untuk dibayar, jimat {value}. Penjimatan yang nampak kecil pada awalnya, tapi sangat terasa bila digunakan.", "Bila staf check, rupanya S-Coin saya cukup untuk {item}. Redeem {item} pakai {points} S-Coin, nilai jimat {value} memang jelas. Terus rasa lega. Saya suka sebab proses dia mudah dan staf bantu sampai faham.", "Ini kali pertama saya rasa reward membership memang terasa bila redeem {item}. Tolak {points} S-Coin, terus terasa penjimatan {value}. Untuk saya, memang sesuai untuk customer yang suka kumpul value untuk masa depan.", "Dah lama simpan S-Coin, hari ni baru nampak hasil dia untuk {item}. Pakai {points} S-Coin saja, dapat kurang {value}. Serius berbaloi. Rasa puas hati sebab dapat guna benefit yang memang ada.", "Datang kedai dengan niat survey, keluar dengan {item} hasil redeem. Guna {points} S-Coin, rasa macam dapat pulangan sebenar sebanyak {value}. Memang terbaik. Saya suka bila point boleh jadi barang sebenar.", "Satu benda yang saya suka hari ni: S-Coin memang boleh guna betul-betul untuk {item}. S-Coin {points} terus bantu kurangkan kos sebanyak {value}. Bagi saya, ini antara pengalaman shopping paling satisfying.", "Saya hampir nak bayar biasa, tapi staf bantu check S-Coin dulu untuk {item}. Saya redeem guna {points} S-Coin, dapat value {value}. S-Coin memang jadi extra value yang berbaloi untuk disimpan.", "Memang rasa berbaloi jadi member bila dapat redeem {item}. S-Coin sebanyak {points} digunakan untuk dapatkan penjimatan {value}. Terus rasa lega. S-Coin ni nampak simple, tapi bila redeem baru terasa power dia.", "Tak pernah sangka point yang terkumpul boleh jadi penjimatan sebenar untuk {item}. Jumlah {points} S-Coin tu memang berbaloi sebab boleh jimat {value}. Untuk saya, rasa macam duit yang dibelanja sebelum ni datang balik dalam bentuk reward.", "Hari ni S-Coin jadi penyelamat bajet saya untuk {item}. Guna {points} S-Coin dan dapat jimat {value}. Serius berbaloi. Reward macam ni memang buat customer rasa dihargai.", "Mula-mula tak perasan baki S-Coin ada banyak, rupa-rupanya cukup untuk {item}. Bila {points} S-Coin ditolak, terus nampak jimat {value}. Memang terbaik. Memang puas hati sebab reward dia bukan sekadar atas kertas.", "Bila tengok {item} boleh ditebus, terus rasa bersemangat. Tolak {points} S-Coin untuk {item}, terus nampak value {value}. Keluar kedai pun rasa senyum sebab bajet selamat.", "Redeem {item} hari ni memang rasa macam reward untuk diri sendiri. Tukar {points} S-Coin kepada value {value}, memang rasa puas. Lepas ni memang lebih rajin kumpul S-Coin.", "S-Coin yang saya kumpul sikit-sikit akhirnya jadi sesuatu yang berguna untuk {item}. {points} S-Coin digunakan dan hasilnya jimat {value}. Terus rasa lega. Satu pengalaman yang buat saya lebih percaya dengan program reward ni.", "Rasa puas bila boleh bawa balik {item} tanpa bayar penuh. Redeem guna {points} S-Coin dan dapat manfaat {value}. Untuk saya, pengalaman macam ni buat saya rasa membership tu ada nilai sebenar.", "Saya selalu lupa nak check S-Coin, hari ni nasib baik staf ingatkan untuk {item}. {points} S-Coin yang dikumpul akhirnya bertukar jadi penjimatan {value}. Serius berbaloi. Paling best, tak perlu pening sebab staf explain dengan jelas.", "Pengalaman paling best bila reward yang disimpan boleh terus digunakan untuk {item}. {points} S-Coin digunakan dengan baik dan hasilnya jimat {value}. Memang terbaik. Ini baru nama dia reward yang customer boleh rasa.", "Tak sia-sia kumpul S-Coin setiap kali shopping, hari ni dapat redeem {item}. Tebus {item} guna {points} S-Coin, penjimatan {value}. Rasa macam menang kecil-kecilan dalam shopping hari ni.", "Hari ni baru saya betul-betul faham kenapa S-Coin ni menarik untuk redeem {item}. {points} S-Coin tu nampak macam nombor saja, tapi bila redeem jadi {value}. Benda kecil yang terkumpul lama-lama rupanya jadi besar.", "Dari tak kisah pasal S-Coin, terus jadi berminat lepas redeem {item}. Dengan {points} S-Coin, {item} jadi lebih mampu milik dan jimat {value}. Terus rasa lega. Lepas ni kalau beli barang elektrik, memang akan ingat S-Coin dulu.", "Hari ni baru rasa betul-betul puas guna S-Coin untuk {item}. {points} S-Coin digunakan dan hasilnya jimat {value}. Untuk saya, memang rasa macam dapat hadiah kecil tapi bermakna.", "Tak sangka S-Coin yang terkumpul selama ni akhirnya berguna untuk {item}. Redeem guna {points} S-Coin dan dapat manfaat {value}. Serius berbaloi. Penjimatan yang nampak kecil pada awalnya, tapi sangat terasa bila digunakan.", "Datang nak tengok barang biasa-biasa, sekali boleh redeem {item}. {points} S-Coin yang dikumpul akhirnya bertukar jadi penjimatan {value}. Memang terbaik. Saya suka sebab proses dia mudah dan staf bantu sampai faham.", "Akhirnya dapat tebus {item} yang memang dah lama saya aim. {points} S-Coin digunakan dengan baik dan hasilnya jimat {value}. Memang sesuai untuk customer yang suka kumpul value untuk masa depan.", "Saya ingat S-Coin tu kecil-kecil saja, rupanya boleh bantu banyak untuk {item}. Tebus {item} guna {points} S-Coin, penjimatan {value}. Rasa puas hati sebab dapat guna benefit yang memang ada.", "Pengalaman redeem {item} hari ni memang buat saya ingat lama. {points} S-Coin tu nampak macam nombor saja, tapi bila redeem jadi {value}. Terus rasa lega. Ini pengalaman yang buat saya rasa nak repeat lagi.", "Bila staf check, rupanya S-Coin saya cukup untuk {item}. Dengan {points} S-Coin, {item} jadi lebih mampu milik dan jimat {value}. Untuk saya, bagi saya, ini antara pengalaman shopping paling satisfying.", "Ini kali pertama saya rasa reward membership memang terasa bila redeem {item}. Dengan {points} S-Coin, nilai redeem jadi {value}. Serius berbaloi. S-Coin memang jadi extra value yang berbaloi untuk disimpan.", "Dah lama simpan S-Coin, hari ni baru nampak hasil dia untuk {item}. Nilai {points} S-Coin tu bersamaan {value}, memang terasa. Memang terbaik. S-Coin ni nampak simple, tapi bila redeem baru terasa power dia.", "Datang kedai dengan niat survey, keluar dengan {item} hasil redeem. Selesai redeem {item} dengan {points} S-Coin dan jimat {value}. Rasa macam duit yang dibelanja sebelum ni datang balik dalam bentuk reward.", "Satu benda yang saya suka hari ni: S-Coin memang boleh guna betul-betul untuk {item}. Pakai {points} S-Coin untuk {item}, dapat saving {value}. Reward macam ni memang buat customer rasa dihargai.", "Saya hampir nak bayar biasa, tapi staf bantu check S-Coin dulu untuk {item}. Jumlah {points} S-Coin tu terus cover nilai {value}. Terus rasa lega. Memang puas hati sebab reward dia bukan sekadar atas kertas.", "Memang rasa berbaloi jadi member bila dapat redeem {item}. Dengan baki {points} S-Coin, {item} jadi lebih ringan untuk dibayar, jimat {value}. Untuk saya, keluar kedai pun rasa senyum sebab bajet selamat.", "Tak pernah sangka point yang terkumpul boleh jadi penjimatan sebenar untuk {item}. Redeem {item} pakai {points} S-Coin, nilai jimat {value} memang jelas. Serius berbaloi. Lepas ni memang lebih rajin kumpul S-Coin.", "Hari ni S-Coin jadi penyelamat bajet saya untuk {item}. Tolak {points} S-Coin, terus terasa penjimatan {value}. Memang terbaik. Satu pengalaman yang buat saya lebih percaya dengan program reward ni.", "Mula-mula tak perasan baki S-Coin ada banyak, rupa-rupanya cukup untuk {item}. Pakai {points} S-Coin saja, dapat kurang {value}. Seronok sebab penjimatan dia terus nampak masa checkout.", "Bila tengok {item} boleh ditebus, terus rasa bersemangat. Guna {points} S-Coin, rasa macam dapat pulangan sebenar sebanyak {value}. Paling best, tak perlu pening sebab staf explain dengan jelas.", "Redeem {item} hari ni memang rasa macam reward untuk diri sendiri. S-Coin {points} terus bantu kurangkan kos sebanyak {value}. Terus rasa lega. Ini baru nama dia reward yang customer boleh rasa.", "S-Coin yang saya kumpul sikit-sikit akhirnya jadi sesuatu yang berguna untuk {item}. Saya redeem guna {points} S-Coin, dapat value {value}. Untuk saya, rasa macam menang kecil-kecilan dalam shopping hari ni.", "Rasa puas bila boleh bawa balik {item} tanpa bayar penuh. S-Coin sebanyak {points} digunakan untuk dapatkan penjimatan {value}. Serius berbaloi. Benda kecil yang terkumpul lama-lama rupanya jadi besar.", "Saya selalu lupa nak check S-Coin, hari ni nasib baik staf ingatkan untuk {item}. Jumlah {points} S-Coin tu memang berbaloi sebab boleh jimat {value}. Memang terbaik. Lepas ni kalau beli barang elektrik, memang akan ingat S-Coin dulu.", "Pengalaman paling best bila reward yang disimpan boleh terus digunakan untuk {item}. Guna {points} S-Coin dan dapat jimat {value}. Memang rasa macam dapat hadiah kecil tapi bermakna.", "Tak sia-sia kumpul S-Coin setiap kali shopping, hari ni dapat redeem {item}. Bila {points} S-Coin ditolak, terus nampak jimat {value}. Penjimatan yang nampak kecil pada awalnya, tapi sangat terasa bila digunakan.", "Hari ni baru saya betul-betul faham kenapa S-Coin ni menarik untuk redeem {item}. Tolak {points} S-Coin untuk {item}, terus nampak value {value}. Terus rasa lega. Saya suka sebab proses dia mudah dan staf bantu sampai faham.", "Dari tak kisah pasal S-Coin, terus jadi berminat lepas redeem {item}. Tukar {points} S-Coin kepada value {value}, memang rasa puas. Untuk saya, memang sesuai untuk customer yang suka kumpul value untuk masa depan.", "Hari ni baru rasa betul-betul puas guna S-Coin untuk {item}. Saya redeem guna {points} S-Coin, dapat value {value}. Serius berbaloi. Memang memorable sebab tak sangka boleh jimat sebanyak tu.", "Tak sangka S-Coin yang terkumpul selama ni akhirnya berguna untuk {item}. S-Coin sebanyak {points} digunakan untuk dapatkan penjimatan {value}. Memang terbaik. Ini pengalaman yang buat saya rasa nak repeat lagi.", "Datang nak tengok barang biasa-biasa, sekali boleh redeem {item}. Jumlah {points} S-Coin tu memang berbaloi sebab boleh jimat {value}. Bagi saya, ini antara pengalaman shopping paling satisfying.", "Akhirnya dapat tebus {item} yang memang dah lama saya aim. Guna {points} S-Coin dan dapat jimat {value}. S-Coin memang jadi extra value yang berbaloi untuk disimpan.", "Saya ingat S-Coin tu kecil-kecil saja, rupanya boleh bantu banyak untuk {item}. Bila {points} S-Coin ditolak, terus nampak jimat {value}. Terus rasa lega. S-Coin ni nampak simple, tapi bila redeem baru terasa power dia.", "Pengalaman redeem {item} hari ni memang buat saya ingat lama. Tolak {points} S-Coin untuk {item}, terus nampak value {value}. Untuk saya, rasa macam duit yang dibelanja sebelum ni datang balik dalam bentuk reward.", "Bila staf check, rupanya S-Coin saya cukup untuk {item}. Tukar {points} S-Coin kepada value {value}, memang rasa puas. Serius berbaloi. Reward macam ni memang buat customer rasa dihargai.", "Ini kali pertama saya rasa reward membership memang terasa bila redeem {item}. {points} S-Coin digunakan dan hasilnya jimat {value}. Memang terbaik. Memang puas hati sebab reward dia bukan sekadar atas kertas.", "Dah lama simpan S-Coin, hari ni baru nampak hasil dia untuk {item}. Redeem guna {points} S-Coin dan dapat manfaat {value}. Keluar kedai pun rasa senyum sebab bajet selamat.", "Datang kedai dengan niat survey, keluar dengan {item} hasil redeem. {points} S-Coin yang dikumpul akhirnya bertukar jadi penjimatan {value}. Lepas ni memang lebih rajin kumpul S-Coin.", "Satu benda yang saya suka hari ni: S-Coin memang boleh guna betul-betul untuk {item}. {points} S-Coin digunakan dengan baik dan hasilnya jimat {value}. Terus rasa lega. Memang berbaloi simpan dan tak biarkan S-Coin terbiar.", "Saya hampir nak bayar biasa, tapi staf bantu check S-Coin dulu untuk {item}. Tebus {item} guna {points} S-Coin, penjimatan {value}. Untuk saya, seronok sebab penjimatan dia terus nampak masa checkout.", "Memang rasa berbaloi jadi member bila dapat redeem {item}. {points} S-Coin tu nampak macam nombor saja, tapi bila redeem jadi {value}. Serius berbaloi. Paling best, tak perlu pening sebab staf explain dengan jelas.", "Tak pernah sangka point yang terkumpul boleh jadi penjimatan sebenar untuk {item}. Dengan {points} S-Coin, {item} jadi lebih mampu milik dan jimat {value}. Memang terbaik. Ini baru nama dia reward yang customer boleh rasa.", "Hari ni S-Coin jadi penyelamat bajet saya untuk {item}. Dengan {points} S-Coin, nilai redeem jadi {value}. Rasa macam menang kecil-kecilan dalam shopping hari ni.", "Mula-mula tak perasan baki S-Coin ada banyak, rupa-rupanya cukup untuk {item}. Nilai {points} S-Coin tu bersamaan {value}, memang terasa. Benda kecil yang terkumpul lama-lama rupanya jadi besar.", "Bila tengok {item} boleh ditebus, terus rasa bersemangat. Selesai redeem {item} dengan {points} S-Coin dan jimat {value}. Terus rasa lega. Lepas ni kalau beli barang elektrik, memang akan ingat S-Coin dulu.", "Redeem {item} hari ni memang rasa macam reward untuk diri sendiri. Pakai {points} S-Coin untuk {item}, dapat saving {value}. Untuk saya, memang rasa macam dapat hadiah kecil tapi bermakna.", "S-Coin yang saya kumpul sikit-sikit akhirnya jadi sesuatu yang berguna untuk {item}. Jumlah {points} S-Coin tu terus cover nilai {value}. Serius berbaloi. Penjimatan yang nampak kecil pada awalnya, tapi sangat terasa bila digunakan.", "Rasa puas bila boleh bawa balik {item} tanpa bayar penuh. Dengan baki {points} S-Coin, {item} jadi lebih ringan untuk dibayar, jimat {value}. Memang terbaik. Saya suka sebab proses dia mudah dan staf bantu sampai faham.", "Saya selalu lupa nak check S-Coin, hari ni nasib baik staf ingatkan untuk {item}. Redeem {item} pakai {points} S-Coin, nilai jimat {value} memang jelas. Saya suka bila point boleh jadi barang sebenar.", "Pengalaman paling best bila reward yang disimpan boleh terus digunakan untuk {item}. Tolak {points} S-Coin, terus terasa penjimatan {value}. Memang memorable sebab tak sangka boleh jimat sebanyak tu.", "Tak sia-sia kumpul S-Coin setiap kali shopping, hari ni dapat redeem {item}. Pakai {points} S-Coin saja, dapat kurang {value}. Terus rasa lega. Ini pengalaman yang buat saya rasa nak repeat lagi.", "Hari ni baru saya betul-betul faham kenapa S-Coin ni menarik untuk redeem {item}. Guna {points} S-Coin, rasa macam dapat pulangan sebenar sebanyak {value}. Untuk saya, bagi saya, ini antara pengalaman shopping paling satisfying.", "Dari tak kisah pasal S-Coin, terus jadi berminat lepas redeem {item}. S-Coin {points} terus bantu kurangkan kos sebanyak {value}. Serius berbaloi. S-Coin memang jadi extra value yang berbaloi untuk disimpan.", "Hari ni baru rasa betul-betul puas guna S-Coin untuk {item}. Jumlah {points} S-Coin tu terus cover nilai {value}. Memang terbaik. S-Coin ni nampak simple, tapi bila redeem baru terasa power dia.", "Tak sangka S-Coin yang terkumpul selama ni akhirnya berguna untuk {item}. Dengan baki {points} S-Coin, {item} jadi lebih ringan untuk dibayar, jimat {value}. Rasa macam duit yang dibelanja sebelum ni datang balik dalam bentuk reward.", "Datang nak tengok barang biasa-biasa, sekali boleh redeem {item}. Redeem {item} pakai {points} S-Coin, nilai jimat {value} memang jelas. Reward macam ni memang buat customer rasa dihargai.", "Akhirnya dapat tebus {item} yang memang dah lama saya aim. Tolak {points} S-Coin, terus terasa penjimatan {value}. Terus rasa lega. Memang puas hati sebab reward dia bukan sekadar atas kertas.", "Saya ingat S-Coin tu kecil-kecil saja, rupanya boleh bantu banyak untuk {item}. Pakai {points} S-Coin saja, dapat kurang {value}. Untuk saya, keluar kedai pun rasa senyum sebab bajet selamat.", "Pengalaman redeem {item} hari ni memang buat saya ingat lama. Guna {points} S-Coin, rasa macam dapat pulangan sebenar sebanyak {value}. Serius berbaloi. Pengalaman macam ni buat saya rasa membership tu ada nilai sebenar.", "Bila staf check, rupanya S-Coin saya cukup untuk {item}. S-Coin {points} terus bantu kurangkan kos sebanyak {value}. Memang terbaik. Memang berbaloi simpan dan tak biarkan S-Coin terbiar.", "Ini kali pertama saya rasa reward membership memang terasa bila redeem {item}. Saya redeem guna {points} S-Coin, dapat value {value}. Seronok sebab penjimatan dia terus nampak masa checkout.", "Dah lama simpan S-Coin, hari ni baru nampak hasil dia untuk {item}. S-Coin sebanyak {points} digunakan untuk dapatkan penjimatan {value}. Paling best, tak perlu pening sebab staf explain dengan jelas.", "Datang kedai dengan niat survey, keluar dengan {item} hasil redeem. Jumlah {points} S-Coin tu memang berbaloi sebab boleh jimat {value}. Terus rasa lega. Ini baru nama dia reward yang customer boleh rasa.", "Satu benda yang saya suka hari ni: S-Coin memang boleh guna betul-betul untuk {item}. Guna {points} S-Coin dan dapat jimat {value}. Untuk saya, rasa macam menang kecil-kecilan dalam shopping hari ni.", "Saya hampir nak bayar biasa, tapi staf bantu check S-Coin dulu untuk {item}. Bila {points} S-Coin ditolak, terus nampak jimat {value}. Serius berbaloi. Benda kecil yang terkumpul lama-lama rupanya jadi besar.", "Memang rasa berbaloi jadi member bila dapat redeem {item}. Tolak {points} S-Coin untuk {item}, terus nampak value {value}. Memang terbaik. Lepas ni kalau beli barang elektrik, memang akan ingat S-Coin dulu.", "Tak pernah sangka point yang terkumpul boleh jadi penjimatan sebenar untuk {item}. Tukar {points} S-Coin kepada value {value}, memang rasa puas. Memang rasa macam dapat hadiah kecil tapi bermakna.", "Hari ni S-Coin jadi penyelamat bajet saya untuk {item}. {points} S-Coin digunakan dan hasilnya jimat {value}. Penjimatan yang nampak kecil pada awalnya, tapi sangat terasa bila digunakan.", "Mula-mula tak perasan baki S-Coin ada banyak, rupa-rupanya cukup untuk {item}. Redeem guna {points} S-Coin dan dapat manfaat {value}. Terus rasa lega. Rasa puas hati sebab dapat guna benefit yang memang ada.", "Bila tengok {item} boleh ditebus, terus rasa bersemangat. {points} S-Coin yang dikumpul akhirnya bertukar jadi penjimatan {value}. Untuk saya, saya suka bila point boleh jadi barang sebenar.", "Redeem {item} hari ni memang rasa macam reward untuk diri sendiri. {points} S-Coin digunakan dengan baik dan hasilnya jimat {value}. Serius berbaloi. Memang memorable sebab tak sangka boleh jimat sebanyak tu.", "S-Coin yang saya kumpul sikit-sikit akhirnya jadi sesuatu yang berguna untuk {item}. Tebus {item} guna {points} S-Coin, penjimatan {value}. Memang terbaik. Ini pengalaman yang buat saya rasa nak repeat lagi.", "Rasa puas bila boleh bawa balik {item} tanpa bayar penuh. {points} S-Coin tu nampak macam nombor saja, tapi bila redeem jadi {value}. Bagi saya, ini antara pengalaman shopping paling satisfying.", "Saya selalu lupa nak check S-Coin, hari ni nasib baik staf ingatkan untuk {item}. Dengan {points} S-Coin, {item} jadi lebih mampu milik dan jimat {value}. S-Coin memang jadi extra value yang berbaloi untuk disimpan.", "Pengalaman paling best bila reward yang disimpan boleh terus digunakan untuk {item}. Dengan {points} S-Coin, nilai redeem jadi {value}. Terus rasa lega. S-Coin ni nampak simple, tapi bila redeem baru terasa power dia.", "Tak sia-sia kumpul S-Coin setiap kali shopping, hari ni dapat redeem {item}. Nilai {points} S-Coin tu bersamaan {value}, memang terasa. Untuk saya, rasa macam duit yang dibelanja sebelum ni datang balik dalam bentuk reward.", "Hari ni baru saya betul-betul faham kenapa S-Coin ni menarik untuk redeem {item}. Selesai redeem {item} dengan {points} S-Coin dan jimat {value}. Serius berbaloi. Reward macam ni memang buat customer rasa dihargai.", "Dari tak kisah pasal S-Coin, terus jadi berminat lepas redeem {item}. Pakai {points} S-Coin untuk {item}, dapat saving {value}. Memang terbaik. Memang puas hati sebab reward dia bukan sekadar atas kertas."]};
+(() => {
+  "use strict";
+  const CONFIG = {placeId:"ChIJzxZKpna-tzER4-OBkjPlxeI", bagKey:"skt-bag-v1", sessionKey:"skt-session-v1", count:3, maintenanceFee:0.05};
+  const GROUPS = [
+    {title:"S-Coin", items:[
+      {id:"scoin_issuance", icon:"🪙", title:"Dapat S-Coin", desc:"Cashback lepas beli barang"},
+      {id:"scoin_redemption", icon:"🎁", title:"Redeem S-Coin", desc:"Barang free guna S-Coin"}]},
+    {title:"PlusOne Warranty", items:[
+      {id:"plusone_entitlement", icon:"🛡️", title:"Dapat PlusOne", desc:"Member: extra 1 tahun warranty"},
+      {id:"plusone_claim", icon:"🧾", title:"Claim PlusOne", desc:"Repair atau dapat baru"}]},
+    {title:"Replacement Warranty (RW)", items:[
+      {id:"replacement_entitlement", icon:"➕", title:"Tambah RW", desc:"Tambah RM sikit, jadi 2 tahun"},
+      {id:"replacement_claim", icon:"🔄", title:"Claim RW", desc:"Rosak, tukar baru"}]}
+  ];
+  const ITEMS = Object.fromEntries(GROUPS.flatMap(g => g.items).map(i => [i.id, i]));
+  const DATA = JSON.parse(document.getElementById("reviewData").textContent);
+  const state = {step:1, category:"", details:{}, fromLink:false, original:"", options:[], picked:0, sets:0, last:{core:-1, opener:-1, closer:-1, service:-1}, used:null, drawn:0, copyFailed:false, busy:false};
+  const $ = id => document.getElementById(id);
+  const el = (tag, cls, text) => {const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n};
 
-  let currentStep = 1;
-  let mode = "earn";
-  let selectedComment = "";
-  let finalHashtags = "";
-
-  const screens = Array.from(document.querySelectorAll('.screen'));
-  const stepPill = document.getElementById('stepPill');
-  const progressBar = document.getElementById('progressBar');
-
-  function $(id) { return document.getElementById(id); }
-
-  function goStep(step) {
-    currentStep = step;
-    screens.forEach(screen => screen.classList.toggle('active', Number(screen.dataset.step) === step));
-    stepPill.textContent = `${step} / 5`;
-    progressBar.style.width = `${(step / 5) * 100}%`;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (step === 4) loadTemplates();
-    if (step === 5) buildFinalReview();
+  /* ---------- helpers ---------- */
+  const digitsOnly = v => String(v || "").replace(/\D/g, "").slice(0, 8);
+  const staffCode = () => {const d = digitsOnly($("staffDigits").value); return d ? "SH" + d : ""};
+  const staffValid = () => /^SH\d{3,8}$/.test(staffCode());
+  const parseAmount = v => {const n = parseFloat(String(v || "").replace(/,/g, "").replace(/[^0-9.]/g, "")); return Number.isFinite(n) ? n : 0};
+  const money = v => {const n = Math.round(Number(v || 0) * 100) / 100; return "RM" + n.toLocaleString("en-MY", Number.isInteger(n) ? {maximumFractionDigits:0} : {minimumFractionDigits:2, maximumFractionDigits:2})};
+  const cat = () => DATA.categories[state.category];
+  function showError(id, on, text){const e = $(id); if (text) e.textContent = text; e.classList.toggle("show", !!on)}
+  function clearErrors(){["staffError","categoryError","detailsError","editorError"].forEach(id => showError(id, false))}
+  function toast(title, text){$("toastTitle").textContent = title; $("toastText").textContent = text; $("toast").classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => $("toast").classList.remove("show"), 3800)}
+  function calcScoin(price, percent){
+    const gross = parseAmount(price) * parseAmount(percent) / 100;
+    const coins = Math.round(gross * (1 - CONFIG.maintenanceFee) * 100);
+    return {gross, fee: gross * CONFIG.maintenanceFee, net: coins / 100, coins};
   }
+  const redeemCoins = value => Math.round(parseAmount(value) * 100);
+  const years = value => Math.min(10, Math.floor(parseAmount(value)));
 
-  function normaliseStaffCode(value) {
-    let clean = String(value || '').toUpperCase().replace(/^#+/, '').replace(/[^A-Z0-9]/g, '');
-    if (/^\d{3,}$/.test(clean)) clean = 'SH' + clean;
-    return clean;
-  }
-
-  function validateStaff() {
-    const staffInput = $('staffCode');
-    staffInput.value = normaliseStaffCode(staffInput.value);
-    $('errStaff').classList.remove('show');
-    if (!staffInput.value.trim()) {
-      $('errStaff').classList.add('show');
-      return;
-    }
-    goStep(2);
-  }
-
-  $('staffCode').addEventListener('input', () => $('errStaff').classList.remove('show'));
-  $('staffCode').addEventListener('blur', () => $('staffCode').value = normaliseStaffCode($('staffCode').value));
-  $('staffCode').addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); validateStaff(); } });
-
-  function setMode(nextMode) {
-    mode = nextMode;
-    $('modeEarn').classList.toggle('active', mode === 'earn');
-    $('modeRedeem').classList.toggle('active', mode === 'redeem');
-    $('earnFields').style.display = mode === 'earn' ? 'block' : 'none';
-    $('redeemFields').style.display = mode === 'redeem' ? 'block' : 'none';
-    $('infoTitle').textContent = mode === 'earn' ? 'Apa barang yang anda beli?' : 'Apa barang yang anda redeem?';
-    $('infoSub').textContent = mode === 'earn'
-      ? 'Isi harga dan peratus S-Coin cashback supaya review nampak lebih jelas.'
-      : 'Isi jumlah S-Coin yang digunakan supaya nilai penjimatan boleh dikira.';
-    selectedComment = '';
-    updateImpact();
-  }
-
-  function numberFromInput(value) {
-    return Number(String(value || '').replace(/,/g, '').replace(/[^0-9.]/g, '')) || 0;
-  }
-
-  function formatRM(num) {
-    return 'RM' + Number(num || 0).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.00', '');
-  }
-
-  function formatPoints(num) {
-    return Number(num || 0).toLocaleString('en-MY', { maximumFractionDigits: 0 });
-  }
-
-  function getValues() {
-    const earnPrice = numberFromInput($('earnPrice').value);
-    const earnPercent = numberFromInput($('earnPercent').value);
-    const redeemPoints = numberFromInput($('redeemPoints').value);
-    const netValue = earnPrice * earnPercent / 100;
-    const redeemValue = redeemPoints / 100;
-    return {
-      staff: normaliseStaffCode($('staffCode').value),
-      earnItem: $('earnItem').value.trim(),
-      earnPrice,
-      earnPercent,
-      netValue,
-      redeemItem: $('redeemItem').value.trim(),
-      redeemPoints,
-      redeemValue
-    };
-  }
-
-  function updateImpact() {
-    const v = getValues();
-    const box = $('impactBox');
-    box.classList.remove('show');
-    if (mode === 'earn' && v.earnPrice > 0 && v.earnPercent > 0) {
-      box.innerHTML = `Anggaran S-Coin cashback: ${formatRM(v.netValue)}<small>Berdasarkan ${v.earnPercent}% daripada harga barang.</small>`;
-      box.classList.add('show');
-    }
-    if (mode === 'redeem' && v.redeemPoints > 0) {
-      box.innerHTML = `Nilai redeem: ${formatRM(v.redeemValue)}<small>100 S-Coin = RM1.00</small>`;
-      box.classList.add('show');
-    }
-  }
-
-  function validateInfo() {
-    const v = getValues();
-    $('errInfo').classList.remove('show');
-    const ok = mode === 'earn'
-      ? Boolean(v.earnItem && v.earnPrice > 0 && v.earnPercent > 0)
-      : Boolean(v.redeemItem && v.redeemPoints > 0);
-    if (!ok) { $('errInfo').classList.add('show'); return; }
-    selectedComment = '';
-    goStep(4);
-  }
-
-  function fillTemplate(text) {
-    const v = getValues();
-    return String(text || '')
-      .replaceAll('{item}', mode === 'earn' ? v.earnItem : v.redeemItem)
-      .replaceAll('{price}', formatRM(v.earnPrice))
-      .replaceAll('{percent}', `${v.earnPercent}%`)
-      .replaceAll('{netValue}', formatRM(v.netValue))
-      .replaceAll('{points}', formatPoints(v.redeemPoints))
-      .replaceAll('{value}', formatRM(v.redeemValue));
-  }
-
-  function shuffle(array) {
-    return array.map(value => [Math.random(), value]).sort((a, b) => a[0] - b[0]).map(pair => pair[1]);
-  }
-
-  function loadTemplates() {
-    if (currentStep !== 4) return;
-    const list = $('templateList');
-    list.innerHTML = '';
-    $('errTemplate').classList.remove('show');
-    const bank = COMMENT_BANK[mode] || [];
-    const chosen = shuffle(bank).slice(0, 4);
-    chosen.forEach((template, index) => {
-      const filled = fillTemplate(template);
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'template';
-      btn.innerText = filled;
-      btn.addEventListener('click', () => {
-        selectedComment = filled;
-        Array.from(document.querySelectorAll('.template')).forEach(el => el.classList.remove('selected'));
-        btn.classList.add('selected');
-        $('errTemplate').classList.remove('show');
+  /* ---------- step 1: categories ---------- */
+  function renderCategories(){
+    const holder = $("categoryList"); holder.textContent = "";
+    GROUPS.forEach(group => {
+      holder.appendChild(el("div", "group", group.title));
+      const grid = el("div", "rows"); grid.setAttribute("role", "radiogroup"); grid.setAttribute("aria-label", group.title);
+      group.items.forEach(item => {
+        const on = state.category === item.id;
+        const b = el("button", "row" + (on ? " selected" : "")); b.type = "button";
+        b.setAttribute("role", "radio"); b.setAttribute("aria-checked", String(on));
+        const txt = el("span", "txt"); txt.append(el("strong", "", item.title), el("small", "", item.desc));
+        b.append(el("span", "ic", item.icon), txt, el("span", "chev", "›"));
+        b.addEventListener("click", () => pickCategory(item.id));
+        grid.appendChild(b);
       });
-      if (index === 0 && !selectedComment) {
-        selectedComment = filled;
-        btn.classList.add('selected');
-      }
-      list.appendChild(btn);
+      holder.appendChild(grid);
     });
   }
-
-  function validateTemplate() {
-    $('errTemplate').classList.remove('show');
-    if (!selectedComment.trim()) { $('errTemplate').classList.add('show'); return; }
-    goStep(5);
+  function setStaffLocked(locked){
+    state.fromLink = locked;
+    $("staffLocked").hidden = !locked; $("staffEdit").hidden = locked;
+    $("staffHint").hidden = locked;
+    $("staffLockedCode").textContent = staffCode();
   }
 
-  function buildHashtags() {
-    const staff = normaliseStaffCode($('staffCode').value);
-    return `${MANDATORY_HASHTAGS} #${staff}`;
+  /* ---------- step 2: details ---------- */
+  function field(id, label, placeholder, opts = {}){
+    const wrap = el("div", "field"); const head = el("div", "label"); const lab = el("label", "", label); lab.htmlFor = id; head.appendChild(lab);
+    if (opts.hint) head.appendChild(el("small", "", opts.hint));
+    const input = el("input"); input.type = "text"; input.id = id; input.placeholder = placeholder; input.autocomplete = "off"; input.value = state.details[id] || "";
+    if (opts.decimal) input.inputMode = "decimal";
+    if (opts.prefix){const box = el("div", "prefix"); box.append(el("span", "", opts.prefix), input); wrap.append(head, box)} else wrap.append(head, input);
+    return wrap;
   }
-
-  function buildFinalReview() {
-    finalHashtags = buildHashtags();
-    $('finalText').value = selectedComment;
-    syncPreview();
+  function chipField(title, options, current, onPick){
+    const wrap = el("div", "field"); wrap.appendChild(el("div", "label", title));
+    const chips = el("div", "chips");
+    options.forEach(o => {
+      const c = el("button", "chip" + (String(current) === String(o.value) ? " selected" : ""), o.label); c.type = "button";
+      c.addEventListener("click", () => {chips.querySelectorAll(".chip").forEach(x => x.classList.toggle("selected", x === c)); onPick(o.value)});
+      chips.appendChild(c);
+    });
+    wrap.appendChild(chips); return wrap;
   }
-
-  function syncPreview() {
-    const text = $('finalText').value.trim();
-    $('previewText').innerText = text;
-    $('previewTags').innerText = buildHashtags();
-  }
-
-  async function copyText(text) {
-    if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(text);
-      return true;
+  function renderDetails(){
+    const c = cat(), id = state.category; $("detailTitle").textContent = ITEMS[id].title;
+    const note = $("categoryNote"); note.textContent = "";
+    if (c.note){const n = el("div", "notice"); n.style.margin = "0 0 16px"; n.append(el("b", "", "!"), el("span", "", c.note)); note.appendChild(n)}
+    const h = $("dynamicFields"); h.textContent = "";
+    const ph = (id.startsWith("replacement_") || id === "scoin_redemption") ? "Contoh: blender Philips" : id.startsWith("plusone_") ? "Contoh: peti sejuk Panasonic" : "Contoh: TV TCL 55 inci";
+    h.appendChild(field("product", id === "scoin_redemption" ? "Barang yang ditebus" : "Produk", ph));
+    if (id === "scoin_issuance"){
+      h.appendChild(field("purchasePrice", "Harga produk", "Contoh: 1,200.00", {prefix:"RM", decimal:true}));
+      const pf = field("cashbackPercent", "S-Coin Cashback (%)", "Contoh: 30", {decimal:true});
+      const input = pf.querySelector("input"); input.inputMode = "numeric";
+      const chips = chipField("", [20,30,37,50,70].map(v => ({label:v + "%", value:v})), state.details.cashbackPercent, v => {input.value = v; capture()});
+      pf.appendChild(chips.querySelector(".chips")); h.appendChild(pf);
+      const calc = el("div", "calc"); calc.id = "scoinCalc"; calc.setAttribute("aria-live", "polite"); h.appendChild(calc);
     }
-    const temp = document.createElement('textarea');
-    temp.value = text;
-    temp.setAttribute('readonly', '');
-    temp.style.position = 'fixed';
-    temp.style.opacity = '0';
-    temp.style.left = '-9999px';
-    document.body.appendChild(temp);
-    temp.focus();
-    temp.select();
-    let ok = false;
-    try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
-    document.body.removeChild(temp);
-    return ok;
-  }
-
-  function showToast(message) {
-    const toast = $('toast');
-    toast.textContent = message;
-    toast.classList.add('show');
-  }
-
-  async function copyThenOpen() {
-    const btn = $('copyBtn');
-    const review = $('finalText').value.trim();
-    if (!review) { showToast('Sila isi review dahulu.'); setTimeout(() => $('toast').classList.remove('show'), 1600); return; }
-    const fullText = `${review}
-
-${buildHashtags()}`;
-    btn.disabled = true;
-    btn.textContent = 'Sedang copy…';
-    try {
-      await copyText(fullText);
-      showToast('Review di-copy. Membuka Google Review…');
-    } catch (err) {
-      showToast('Membuka Google Review… jika tidak tersalin, tekan dan copy ayat di page ini dahulu.');
+    if (id === "scoin_redemption"){
+      h.appendChild(field("itemValue", "Nilai barang yang ditebus", "Contoh: 200.00", {prefix:"RM", decimal:true}));
+      const calc = el("div", "calc"); calc.id = "scoinCalc"; calc.setAttribute("aria-live", "polite"); h.appendChild(calc);
     }
-    setTimeout(() => {
-      window.location.href = GOOGLE_REVIEW_URL;
-    }, 650);
+    if (id === "plusone_entitlement"){
+      h.appendChild(field("purchasePrice", "Harga beli", "Contoh: 2,000.00", {prefix:"RM", decimal:true}));
+      const wf = field("factoryYears", "Warranty kilang (tahun)", "Contoh: 1", {decimal:true});
+      const input = wf.querySelector("input"); input.inputMode = "numeric";
+      const chips = chipField("", [1,2,3].map(v => ({label:v + " tahun", value:v})), state.details.factoryYears, v => {input.value = v; capture()});
+      wf.appendChild(chips.querySelector(".chips")); h.appendChild(wf);
+      const calc = el("div", "calc"); calc.id = "scoinCalc"; calc.setAttribute("aria-live", "polite"); h.appendChild(calc);
+    }
+    if (id === "plusone_claim"){
+      const hidden = el("input"); hidden.type = "hidden"; hidden.id = "claimOutcome"; hidden.value = state.details.claimOutcome || "";
+      const f = chipField("Apa yang berlaku?", DATA.plusone_claim_outcomes.map(o => ({label:o.label, value:o.id})), hidden.value, v => {hidden.value = v; capture()});
+      f.appendChild(hidden); h.appendChild(f);
+    }
+    if (id === "replacement_entitlement"){
+      h.appendChild(field("purchasePrice", "Harga barang", "Contoh: 100.00", {prefix:"RM", decimal:true, hint:"Bawah RM400"}));
+      h.appendChild(field("rwPrice", "Harga RW yang ditambah", "Contoh: 7.00", {prefix:"RM", decimal:true}));
+      const calc = el("div", "calc"); calc.id = "scoinCalc"; calc.setAttribute("aria-live", "polite"); h.appendChild(calc);
+    }
+    h.querySelectorAll("input").forEach(i => i.addEventListener("input", capture));
+    updateCalc();
+  }
+  function capture(){
+    const d = {}; ["product","purchasePrice","cashbackPercent","itemValue","factoryYears","rwPrice","claimOutcome"].forEach(id => {const i = $(id); if (i) d[id] = i.value});
+    state.details = d; state.original = ""; state.options = []; clearErrors(); updateCalc(); saveSession();
+  }
+  function updateCalc(){
+    const box = $("scoinCalc"); if (!box) return; box.textContent = "";
+    if (state.category === "plusone_entitlement"){
+      const y = years(state.details.factoryYears), price = parseAmount(state.details.purchasePrice);
+      if (y <= 0){box.textContent = "Pilih warranty kilang untuk kira jumlah warranty."; return}
+      box.append(el("strong", "", "Total warranty " + (y + 1) + " tahun"), el("span", "", "Kilang " + y + " tahun + PlusOne 1 tahun"));
+      if (price > 0) box.append(el("span", "fee", (price < 500 ? "Biasanya untuk barang lebih RM500. " : "") + "Repair dalam tahun PlusOne ditanggung sampai " + money(price) + "."));
+      return;
+    }
+    if (state.category === "replacement_entitlement"){
+      const price = parseAmount(state.details.purchasePrice), rw = parseAmount(state.details.rwPrice);
+      box.append(el("strong", "", "Warranty 2 tahun" + (rw > 0 ? " dengan RW " + money(rw) : "")), el("span", "", "Asal 1 tahun + RW 1 tahun. Rosak dalam 2 tahun, tukar baru."));
+      if (price > 400) box.append(el("span", "fee", "RW hanya untuk barang bawah RM400."));
+      return;
+    }
+    if (state.category === "scoin_redemption"){
+      const v = parseAmount(state.details.itemValue);
+      if (v <= 0){box.textContent = "Isi nilai barang untuk kira S-Coin yang digunakan."; return}
+      box.append(
+        el("strong", "", redeemCoins(v).toLocaleString("en-MY") + " S-Coin digunakan"),
+        el("span", "", money(v) + " × 100 = " + redeemCoins(v).toLocaleString("en-MY") + " S-Coin"),
+        el("span", "fee", "Kadar: RM1 = 100 S-Coin. Jumlah ni akan masuk dalam ayat review.")
+      );
+      return;
+    }
+    const price = parseAmount(state.details.purchasePrice), pct = parseAmount(state.details.cashbackPercent);
+    if (price <= 0 || pct <= 0 || pct > 100){box.textContent = "Isi harga dan % cashback untuk kira nilai S-Coin."; return}
+    const r = calcScoin(price, pct);
+    box.append(
+      el("strong", "", money(r.net) + " · " + r.coins.toLocaleString("en-MY") + " S-Coin"),
+      el("span", "", money(price) + " × " + pct + "% = " + money(r.gross)),
+      el("span", "fee", "Selepas tolak 5% maintenance fee (" + money(r.fee) + "). Untuk makluman sahaja, tak masuk dalam ayat review.")
+    );
+  }
+  function validateDetails(){
+    const d = state.details, id = state.category; let ok = !!String(d.product || "").trim(), msg = "Lengkapkan maklumat yang diperlukan.";
+    if (id === "scoin_issuance"){const p = parseAmount(d.cashbackPercent); ok = ok && p > 0 && p <= 100 && parseAmount(d.purchasePrice) > 0 && calcScoin(d.purchasePrice, p).coins > 0}
+    if (id === "scoin_redemption") ok = ok && redeemCoins(d.itemValue) > 0;
+    if (id === "plusone_entitlement") ok = ok && years(d.factoryYears) > 0 && parseAmount(d.purchasePrice) > 0;
+    if (id === "plusone_claim") ok = ok && !!d.claimOutcome;
+    if (id === "replacement_entitlement"){
+      ok = ok && parseAmount(d.purchasePrice) > 0 && parseAmount(d.rwPrice) > 0;
+      if (parseAmount(d.purchasePrice) > 400){ok = false; msg = "RW hanya untuk small appliance bawah RM400."}
+    }
+    if (id.startsWith("plusone_") && /(^|\s)(tv|television|televisyen)(\s|$)/i.test(String(d.product || ""))){ok = false; msg = "TV tak layak untuk PlusOne Warranty. Pilih kategori yang betul."}
+    showError("detailsError", !ok, msg); return ok;
   }
 
-  setMode('earn');
-  goStep(1);
+  /* ---------- step 3: one suggestion at a time (shuffle bag, rotating lengths) ---------- */
+  function values(){
+    const d = state.details;
+    const pct = parseAmount(d.cashbackPercent), r = calcScoin(d.purchasePrice, pct);
+    return {
+      product: String(d.product || "").trim().replace(/\s+/g, " "),
+      purchasePrice: money(parseAmount(d.purchasePrice)),
+      cashbackPercent: pct + "%",
+      scoinCoins: r.coins.toLocaleString("en-MY") + " S-Coin",
+      scoinRM: money(r.net),
+      itemRM: money(parseAmount(d.itemValue)),
+      redeemCoins: redeemCoins(d.itemValue).toLocaleString("en-MY") + " S-Coin",
+      factoryYears: years(d.factoryYears) + " tahun",
+      totalYears: (years(d.factoryYears) + 1) + " tahun",
+      rwPrice: money(parseAmount(d.rwPrice))
+    };
+  }
+  function fill(t){
+    const v = values();
+    // Capitalise a value that starts a sentence (but leave names like "iPhone" alone).
+    const cap = x => /^[a-z](?![A-Z])/.test(x) ? x.charAt(0).toUpperCase() + x.slice(1) : x;
+    const s = String(t).replace(/(^|[.!?] )\{(\w+)\}/g, (_, p, k) => p + cap(String(v[k] ?? "")))
+      .replace(/\{(\w+)\}/g, (_, k) => v[k] ?? "").replace(/\s+/g, " ").trim();
+    return cap(s);
+  }
+  function rnd(n){if (window.crypto?.getRandomValues){const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n} return Math.floor(Math.random() * n)}
+  function shuffle(a){for (let i = a.length - 1; i > 0; i--){const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]} return a}
+  function loadBags(){try{return JSON.parse(localStorage.getItem(CONFIG.bagKey)) || {}}catch{return {}}}
+  // Core sentence: shuffle bag per category, so one phone sees every core before any repeats.
+  function drawCore(){
+    const c = cat(), variant = c.variant ? String(state.details[c.variant] || "") : "";
+    const T = Array.isArray(c.cores) ? c.cores : c.cores[variant], key = state.category + (variant ? ":" + variant : "");
+    const n = T.length, bags = loadBags();
+    let rest = (Array.isArray(bags[key]) ? bags[key] : []).filter(i => Number.isInteger(i) && i < n);
+    if (!rest.length) rest = shuffle([...Array(n).keys()].filter(i => i !== state.last.core));
+    const pick = rest[0];
+    bags[key] = rest.slice(1);
+    try{localStorage.setItem(CONFIG.bagKey, JSON.stringify(bags))}catch{}
+    state.last.core = pick;
+    return T[pick];
+  }
+  // Other parts: fresh random pick each time, never the same as the previous one.
+  function pickFresh(list, key){
+    const used = state.used ? state.used[key] : null;
+    let i = rnd(list.length), tries = 0;
+    while (tries++ < 30 && list.length > 1 && (i === state.last[key] || (used && used.has(i)))) i = rnd(list.length);
+    if (used) used.add(i);
+    state.last[key] = i; return list[i];
+  }
+  function drawOne(){
+    const c = cat();
+    const core = drawCore();
+    const closer = pickFresh(c.closers, "closer");
+    // Mention the store name at most once per review.
+    const named = t => /Kuala Terengganu/.test(t);
+    let opener = pickFresh(DATA.openers[c.opener], "opener");
+    for (let i = 0; i < 15 && named(opener) && (named(core) || named(closer)); i++) opener = pickFresh(DATA.openers[c.opener], "opener");
+    const parts = [opener, core];
+    const svcChance = /staf/i.test(core) ? 0.25 : 0.55;
+    if (rnd(100) < svcChance * 100){
+      const svc = pickFresh(DATA.service, "service");
+      if (svc.split(" ")[0] !== closer.split(" ")[0]) parts.push(svc);
+    }
+    parts.push(closer);
+    state.drawn++;
+    return parts.map(fill).join(" ");
+  }
+  /* Three random options at a time; the customer picks one, then can edit it. */
+  const isEdited = () => !!$("editor").value.trim() && $("editor").value !== state.original;
+  function renderOptions(){
+    const list = $("optionList"); list.textContent = "";
+    state.options.forEach((text, i) => {
+      const b = el("button", "opt" + (i === state.picked ? " selected" : ""), text); b.type = "button";
+      b.setAttribute("role", "radio"); b.setAttribute("aria-checked", String(i === state.picked));
+      b.addEventListener("click", () => pickOption(i));
+      list.appendChild(b);
+    });
+    $("sugStatus").textContent = state.sets > 1 ? "Set ayat ke-" + state.sets + ". Tap untuk pilih." : "3 ayat rawak untuk anda. Tap untuk pilih.";
+  }
+  function pickOption(i){
+    if (i === state.picked) return;
+    if (isEdited() && !confirm("Guna ayat ni? Perubahan yang anda buat akan hilang.")) return;
+    state.picked = i; state.original = state.options[i]; $("editor").value = state.original;
+    renderOptions(); updateFinal();
+  }
+  function showSuggestion(){
+    state.used = {opener:new Set(), closer:new Set(), service:new Set()};
+    state.options = Array.from({length: CONFIG.count}, drawOne);
+    state.used = null; state.sets++; state.picked = 0;
+    state.original = state.options[0]; $("editor").value = state.original;
+    renderOptions(); updateFinal();
+  }
+  function swapSuggestion(){
+    if (isEdited() && !confirm("Tunjuk ayat lain? Perubahan yang anda buat akan hilang.")) return;
+    showSuggestion();
+  }
+
+  /* ---------- edit + copy ---------- */
+  function tags(){return "#" + staffCode() + " " + DATA.store_hashtag}
+  function cleanBody(text){
+    return String(text || "")
+      .replace(/(^|\s)#[^\s#]*/g, "$1")
+      .replace(/[ \t]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+  }
+  function finalText(){const body = cleanBody($("editor").value); return body ? body + " " + tags() : ""}
+  function updateFinal(){
+    $("tagStaff").textContent = "#" + staffCode(); $("tagStore").textContent = DATA.store_hashtag;
+    $("finalText").textContent = finalText() || "—"; showError("editorError", false);
+  }
+  async function copyText(text){
+    if (navigator.clipboard && window.isSecureContext){try{await navigator.clipboard.writeText(text); return}catch{}}
+    const a = el("textarea"); a.value = text; a.setAttribute("readonly", ""); a.style.cssText = "position:fixed;top:-9999px;opacity:0";
+    document.body.appendChild(a); a.select(); a.setSelectionRange(0, text.length); const ok = document.execCommand("copy"); a.remove();
+    if (!ok) throw new Error("copy failed");
+  }
+  async function doCopy(openGoogle){
+    const text = finalText();
+    if (!text){showError("editorError", true); $("editor").focus(); return}
+    if (state.busy) return;
+    try{
+      await copyText(text); state.copyFailed = false;
+      toast("Ayat dah copy", openGoogle ? "Paste dekat Google Review dan pilih rating yang jujur." : "Buka Google Review dan paste bila sedia.");
+    }catch{
+      if (!(openGoogle && state.copyFailed)){
+        state.copyFailed = true;
+        const r = document.createRange(); r.selectNodeContents($("finalText")); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        toast("Copy manual ya", "Tekan lama pada “Hasil” untuk copy, kemudian tekan butang sekali lagi.");
+        return;
+      }
+    }
+    if (!openGoogle) return;
+    state.busy = true; updateFooter();
+    setTimeout(() => {location.assign("https://search.google.com/local/writereview?placeid=" + encodeURIComponent(CONFIG.placeId)); setTimeout(() => {state.busy = false; updateFooter()}, 1500)}, 350);
+  }
+
+  /* ---------- navigation ---------- */
+  function go(step){
+    state.step = step; clearErrors();
+    document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", Number(s.dataset.step) === step));
+    $("progressBar").style.width = Math.round(step / 3 * 100) + "%";
+    $("stepLabel").textContent = step + " / 3";
+    if (step === 2) renderDetails();
+    if (step === 3){if (state.original && state.options.length){renderOptions(); updateFinal()} else showSuggestion()}
+    updateFooter(); scrollTo({top:0, behavior:"smooth"});
+  }
+  function updateFooter(){
+    const s = state.step, alt = $("altBtn"), main = $("mainBtn");
+    $("actionbar").hidden = s === 1; main.disabled = state.busy;
+    alt.textContent = s === 3 ? "Copy je" : "Kembali";
+    main.textContent = s === 2 ? "Tunjuk ayat" : state.busy ? "Membuka Google..." : "Copy & buka Google";
+  }
+  function pickCategory(id){
+    if (state.category !== id){state.category = id; state.details = {}; state.original = ""; state.options = []}
+    renderCategories(); clearErrors(); saveSession();
+    if (!staffValid()){setStaffLocked(false); showError("staffError", true); $("staffDigits").focus(); return}
+    go(2);
+  }
+  function onMain(){
+    if (state.step === 2){if (validateDetails()) go(3); return}
+    if (state.step === 3) doCopy(true);
+  }
+  function onAlt(){if (state.busy) return; if (state.step === 3){doCopy(false); return} go(1)}
+
+  /* ---------- session ---------- */
+  function saveSession(){try{sessionStorage.setItem(CONFIG.sessionKey, JSON.stringify({category:state.category, details:state.details, staff:digitsOnly($("staffDigits").value), fromLink:state.fromLink}))}catch{}}
+  function restoreSession(){
+    let saved = {}; try{saved = JSON.parse(sessionStorage.getItem(CONFIG.sessionKey) || "{}")}catch{}
+    state.category = DATA.categories[saved.category] ? saved.category : ""; state.details = saved.details || {};
+    $("staffDigits").value = saved.staff || "";
+    const url = new URLSearchParams(location.search).get("staff");
+    if (url){const d = digitsOnly(String(url).toUpperCase().replace(/^#?SH/, "")); if (/^\d{3,8}$/.test(d)){$("staffDigits").value = d; setStaffLocked(true); return}}
+    setStaffLocked(!!saved.fromLink && staffValid());
+  }
+
+  function init(){
+    restoreSession(); renderCategories(); updateFooter();
+    $("mainBtn").addEventListener("click", onMain);
+    $("altBtn").addEventListener("click", onAlt);
+    $("staffChange").addEventListener("click", () => {setStaffLocked(false); $("staffDigits").focus(); saveSession()});
+    $("staffDigits").addEventListener("input", e => {e.target.value = digitsOnly(e.target.value.toUpperCase().replace(/^#?SH/, "")); showError("staffError", false); saveSession()});
+    $("editor").addEventListener("input", updateFinal);
+    $("swapBtn").addEventListener("click", swapSuggestion);
+    $("backLink").addEventListener("click", () => go(2));
+    addEventListener("pageshow", () => {state.busy = false; updateFooter()});
+  }
+  init();
+})();
 </script>
 </body>
 </html>
